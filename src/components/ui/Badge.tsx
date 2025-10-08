@@ -65,12 +65,10 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     if (animate) {
       return (
         <motion.div
-          ref={ref}
           className={badgeClasses}
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          {...props}
         >
           {content}
         </motion.div>

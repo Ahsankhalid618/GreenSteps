@@ -51,11 +51,14 @@ The "Database not found" error occurs because the Appwrite database and collecti
 - `totalPoints` (Integer, Required, Default: 0)
 - `level` (Integer, Required, Default: 1)
 - `currentStreak` (Integer, Required, Default: 0)
-- `totalCarbonSaved` (Double, Required, Default: 0)
-- `totalWaterSaved` (Double, Required, Default: 0)
-- `totalWasteReduced` (Double, Required, Default: 0)
+- `totalActions` (Integer, Required, Default: 0)
+- `carbonSaved` (Double, Required, Default: 0)
+- `waterSaved` (Double, Required, Default: 0)
+- `wasteReduced` (Double, Required, Default: 0)
 - `badges` (String, 1000 chars, Optional)
 - `preferences` (String, 1000 chars, Optional)
+- `createdAt` (DateTime, Required)
+- `updatedAt` (DateTime, Required)
 
 **Permissions:**
 - Read: Any
@@ -90,7 +93,7 @@ The "Database not found" error occurs because the Appwrite database and collecti
 #### Badges Collection
 - Collection ID: `badges`
 - Name: `Badges`
-- Description: `Achievement badges and rewards`
+- Description: `Achievement badge definitions`
 
 **Attributes:**
 - `name` (String, 255 chars, Required)
@@ -99,8 +102,10 @@ The "Database not found" error occurs because the Appwrite database and collecti
 - `category` (String, 50 chars, Required)
 - `rarity` (Enum: common, rare, epic, legendary, Required)
 - `points` (Integer, Required)
-- `requirements` (String, 1000 chars, Required)
+- `conditions` (String, 2000 chars, Required)
 - `isActive` (Boolean, Required, Default: true)
+- `createdAt` (DateTime, Required)
+- `updatedAt` (DateTime, Required)
 
 **Permissions:**
 - Read: Any
@@ -111,7 +116,7 @@ The "Database not found" error occurs because the Appwrite database and collecti
 #### Achievements Collection
 - Collection ID: `achievements`
 - Name: `Achievements`
-- Description: `User achievements and progress`
+- Description: `User earned badges and achievements`
 
 **Attributes:**
 - `userId` (String, 255 chars, Required)

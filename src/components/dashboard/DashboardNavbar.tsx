@@ -1,10 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useAuthContext } from "@/components/providers/AuthProvider";
-import { UserMenu } from "@/components/ui/UserMenu";
-import { LogoutButton } from "@/components/ui/LogoutButton";
-import { Badge } from "@/components/ui/Badge";
-import { Menu, Bell, Flame, Trophy, Zap, LogOut } from "lucide-react";
+import { Menu, Flame, Trophy, Zap } from "lucide-react";
 
 interface DashboardNavbarProps {
   onMenuClick: () => void;
@@ -20,7 +17,6 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
     points: 2450,
     streak: 7,
     level: 3,
-    notifications: 3,
   };
 
   return (
@@ -89,41 +85,6 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
                 Level {mockStats.level}
               </span>
             </motion.div>
-          </div>
-
-          {/* Right side - Notifications and user menu */}
-          <div className="flex items-center space-x-3">
-            {/* Notifications */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="text-earth-600 dark:text-dark-text-secondary relative rounded-lg p-2 transition-colors hover:bg-green-100 dark:hover:bg-green-900/20"
-            >
-              <Bell className="h-5 w-5" />
-              {mockStats.notifications > 0 && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white"
-                >
-                  {mockStats.notifications}
-                </motion.div>
-              )}
-            </motion.button>
-
-            {/* User menu */}
-            <UserMenu />
-
-            {/* Quick logout button */}
-            <LogoutButton
-              variant="ghost"
-              size="sm"
-              showConfirmation={false}
-              icon={<LogOut className="h-4 w-4" />}
-              className="hidden text-red-600 hover:bg-red-50 hover:text-red-700 lg:flex dark:hover:bg-red-900/20"
-            >
-              <span className="hidden sm:inline">Logout</span>
-            </LogoutButton>
           </div>
         </div>
 

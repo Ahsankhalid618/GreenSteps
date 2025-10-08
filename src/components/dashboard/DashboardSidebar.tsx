@@ -13,7 +13,7 @@ import {
   User,
   X,
   Leaf,
-  Settings,
+  LogOut,
 } from "lucide-react";
 
 interface DashboardSidebarProps {
@@ -148,9 +148,9 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                     fullWidth
                     showConfirmation={false}
                     className="justify-start text-left text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
-                    icon={<Settings className="h-4 w-4" />}
+                    icon={<LogOut className="h-4 w-4" />}
                   >
-                    Sign Out
+                    Logout
                   </LogoutButton>
                 </div>
               </li>
@@ -250,9 +250,9 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                         fullWidth
                         showConfirmation={false}
                         className="justify-start text-left text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
-                        icon={<Settings className="h-4 w-4" />}
+                        icon={<LogOut className="h-4 w-4" />}
                       >
-                        Sign Out
+                        Logout
                       </LogoutButton>
                     </div>
                   </li>
