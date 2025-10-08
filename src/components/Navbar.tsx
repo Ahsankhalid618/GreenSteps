@@ -15,13 +15,17 @@ export const Navbar = ({ selectedRoute }: NavbarProps) => {
   return (
     <nav
       className={
-        "sticky top-7 z-10 flex w-[90%] flex-row items-center justify-between rounded-2xl border border-neutral-800 bg-neutral-900-80 p-4 backdrop-blur-xl md:w-[51rem]"
+        "dark:border-dark-border bg-neutral-900-80 dark:bg-dark-surface-elevated sticky top-7 z-10 flex w-[90%] flex-row items-center justify-between rounded-2xl border border-neutral-800 p-4 backdrop-blur-xl md:w-[51rem]"
       }
     >
       <Link href={"/"}>
         <Logo />
       </Link>
-      <div className={"flex gap-4 text-white sm:gap-10"}>
+      <div
+        className={
+          "dark:text-dark-text-primary flex gap-4 text-white sm:gap-10"
+        }
+      >
         <span
           className={
             selectedRoute === "rules" ? "font-semibold" : "font-normal"

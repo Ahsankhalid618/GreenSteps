@@ -9,30 +9,35 @@ import { useAuthContext } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardHeader, CardContent } from "@/components/ui/Card";
-import { Leaf, Mail, Lock, ArrowRight } from "lucide-react";
+import { Leaf, Mail, Lock, User, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { loginSchema, type LoginFormData } from "@/lib/validations";
+import { registerSchema, type RegisterFormData } from "@/lib/validations";
 
-export default function SignInPage() {
-  const { login, loading, error, clearError } = useAuthContext();
+export default function SignUpPage() {
+  const {
+    register: registerUser,
+    loading,
+    error,
+    clearError,
+  } = useAuthContext();
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     try {
       clearError();
-      await login(data);
+      await registerUser(data);
       router.push("/dashboard");
     } catch (err) {
       // Error is handled by the auth context
-      console.error("Sign in error:", err);
+      console.error("Registration error:", err);
     }
   };
 
@@ -51,16 +56,27 @@ export default function SignInPage() {
                 <Leaf className="h-8 w-8 text-white" />
               </div>
               <h1 className="text-earth-900 mb-2 text-2xl font-bold">
-                Welcome Back
+                Join GreenSteps
               </h1>
               <p className="text-earth-600">
-                Sign in to continue your eco-journey
+                Start your eco-friendly journey today
               </p>
             </div>
           </CardHeader>
 
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div>
+                <Input
+                  label="Full Name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  icon={<User className="h-4 w-4" />}
+                  {...register("name")}
+                  error={errors.name?.message}
+                />
+              </div>
+
               <div>
                 <Input
                   label="Email"
@@ -76,10 +92,22 @@ export default function SignInPage() {
                 <Input
                   label="Password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="Create a password"
                   icon={<Lock className="h-4 w-4" />}
                   {...register("password")}
                   error={errors.password?.message}
+                  helperText="Must contain uppercase, lowercase, and number"
+                />
+              </div>
+
+              <div>
+                <Input
+                  label="Confirm Password"
+                  type="password"
+                  placeholder="Confirm your password"
+                  icon={<Lock className="h-4 w-4" />}
+                  {...register("confirmPassword")}
+                  error={errors.confirmPassword?.message}
                 />
               </div>
 
@@ -99,29 +127,29 @@ export default function SignInPage() {
                 loading={loading || isSubmitting}
                 icon={<ArrowRight className="h-4 w-4" />}
               >
-                {loading || isSubmitting ? "Signing in..." : "Sign In"}
+                {loading || isSubmitting
+                  ? "Creating Account..."
+                  : "Create Account"}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-earth-600">
-                Don't have an account?{" "}
+                Already have an account?{" "}
                 <Link
-                  href="/sign-up"
+                  href="/sign-in"
                   className="font-medium text-green-600 hover:text-green-700"
                 >
-                  Sign up
+                  Sign in
                 </Link>
               </p>
             </div>
 
-            <div className="mt-4 text-center">
-              <Link
-                href="/forgot-password"
-                className="text-earth-500 hover:text-earth-700 text-sm"
-              >
-                Forgot your password?
-              </Link>
+            <div className="mt-4 rounded-lg bg-green-50 p-4">
+              <p className="text-center text-sm text-green-700">
+                By signing up, you agree to our Terms of Service and Privacy
+                Policy. Start making a positive impact on the environment today!
+              </p>
             </div>
           </CardContent>
         </Card>

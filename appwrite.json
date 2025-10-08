@@ -1,6 +1,6 @@
 {
     "projectId": "<YOUR_PROJECT_ID>",
-    "projectName": "<YOUR_PROJECT_NAME>",
+    "projectName": "GreenSteps",
     "settings": {
         "services": {
             "account": true,
@@ -39,22 +39,282 @@
     },
     "databases": [
         {
-            "$id": "hackathon",
-            "name": "hackathon",
+            "$id": "greensteps",
+            "name": "greensteps",
             "enabled": true
         }
     ],
     "collections": [
         {
-            "$id": "submissions",
+            "$id": "users",
             "$permissions": [
                 "create(\"users\")",
                 "read(\"users\")",
                 "update(\"users\")",
                 "delete(\"users\")"
             ],
-            "databaseId": "hackathon",
-            "name": "submissions",
+            "databaseId": "greensteps",
+            "name": "users",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null
+                },
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "email",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "avatar",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null
+                },
+                {
+                    "key": "bio",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null
+                },
+                {
+                    "key": "location",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "totalPoints",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "level",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 1
+                },
+                {
+                    "key": "currentStreak",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "longestStreak",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "totalActions",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "badges",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 0,
+                    "default": []
+                },
+                {
+                    "key": "achievements",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 0,
+                    "default": []
+                },
+                {
+                    "key": "preferences",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": "{}"
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "userId_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": ["userId"]
+                }
+            ]
+        },
+        {
+            "$id": "actions",
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
+            "databaseId": "greensteps",
+            "name": "actions",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "userId",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null
+                },
+                {
+                    "key": "title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1000,
+                    "default": null
+                },
+                {
+                    "key": "points",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "carbonSaved",
+                    "type": "double",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "waterSaved",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "wasteReduced",
+                    "type": "double",
+                    "required": false,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "timestamp",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": null
+                },
+                {
+                    "key": "verified",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": false
+                },
+                {
+                    "key": "location",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null
+                },
+                {
+                    "key": "metadata",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": "{}"
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "userId_timestamp_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": ["userId", "timestamp"]
+                },
+                {
+                    "key": "category_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": ["category"]
+                }
+            ]
+        },
+        {
+            "$id": "challenges",
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
+            "databaseId": "greensteps",
+            "name": "challenges",
             "enabled": true,
             "documentSecurity": false,
             "attributes": [
@@ -71,66 +331,229 @@
                     "type": "string",
                     "required": true,
                     "array": false,
-                    "size": 1024,
+                    "size": 1000,
                     "default": null
                 },
                 {
-                    "key": "inspiration",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 1024,
-                    "default": null
-                },
-                {
-                    "key": "stack",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 1024,
-                    "default": null
-                },
-                {
-                    "key": "repositoryLink",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 255,
-                    "default": null
-                },
-                {
-                    "key": "demoLink",
-                    "type": "string",
-                    "required": true,
-                    "array": false,
-                    "size": 255,
-                    "default": null
-                },
-                {
-                    "key": "user-id",
+                    "key": "type",
                     "type": "string",
                     "required": true,
                     "array": false,
                     "size": 50,
                     "default": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": "upcoming"
+                },
+                {
+                    "key": "startDate",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": null
+                },
+                {
+                    "key": "endDate",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": null
+                },
+                {
+                    "key": "target",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "unit",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null
+                },
+                {
+                    "key": "points",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "badge",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "participants",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 0,
+                    "default": []
+                },
+                {
+                    "key": "createdBy",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null
+                },
+                {
+                    "key": "isPublic",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": true
+                },
+                {
+                    "key": "requirements",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": "[]"
+                },
+                {
+                    "key": "rewards",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": "[]"
                 }
             ],
-            "indexes": []
+            "indexes": [
+                {
+                    "key": "status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": ["status"]
+                },
+                {
+                    "key": "type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": ["type"]
+                }
+            ]
         },
         {
-            "$id": "submissions-test",
+            "$id": "badges",
             "$permissions": [
-                "read(\"users\")",
                 "create(\"users\")",
+                "read(\"users\")",
                 "update(\"users\")",
                 "delete(\"users\")"
             ],
-            "databaseId": "hackathon",
-            "name": "submissions-test",
+            "databaseId": "greensteps",
+            "name": "badges",
             "enabled": true,
             "documentSecurity": false,
-            "attributes": [],
-            "indexes": []
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1000,
+                    "default": null
+                },
+                {
+                    "key": "icon",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null
+                },
+                {
+                    "key": "category",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null
+                },
+                {
+                    "key": "rarity",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": "common"
+                },
+                {
+                    "key": "points",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "size": 0,
+                    "default": 0
+                },
+                {
+                    "key": "requirements",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": "[]"
+                },
+                {
+                    "key": "unlockedBy",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 0,
+                    "default": []
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "category_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": ["category"]
+                },
+                {
+                    "key": "rarity_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": ["rarity"]
+                }
+            ]
         }
     ]
 }

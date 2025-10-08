@@ -1,36 +1,258 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
 
-@layer components {
-    .title-large {
-        @apply text-6xl font-medium
+@theme {
+  /* Light theme colors */
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-300: #86efac;
+  --color-green-400: #4ade80;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+  --color-green-900: #14532d;
+  --color-green-950: #052e16;
+
+  --color-earth-50: #fafaf9;
+  --color-earth-100: #f5f5f4;
+  --color-earth-200: #e7e5e4;
+  --color-earth-300: #d6d3d1;
+  --color-earth-400: #a8a29e;
+  --color-earth-500: #78716c;
+  --color-earth-600: #57534e;
+  --color-earth-700: #44403c;
+  --color-earth-800: #292524;
+  --color-earth-900: #1c1917;
+
+  /* Dark theme colors */
+  --color-dark-bg: #0a0a0a;
+  --color-dark-surface: #111111;
+  --color-dark-surface-elevated: #1a1a1a;
+  --color-dark-border: #2a2a2a;
+  --color-dark-text-primary: #ffffff;
+  --color-dark-text-secondary: #a3a3a3;
+  --color-dark-text-muted: #737373;
+
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-250: var(--neutral-250);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-750: var(--neutral-750);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-850: var(--neutral-850);
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-900-80: var(--neutral-900-80);
+
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-display: Poppins, system-ui, sans-serif;
+
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+  --animate-slide-up: slideUp 0.3s ease-out;
+  --animate-bounce-in: bounceIn 0.6s ease-out;
+  --animate-pulse-green: pulseGreen 2s infinite;
+  --animate-float: float 3s ease-in-out infinite;
+
+  --backdrop-blur-xs: 2px;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
     }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes slideUp {
+    0% {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes bounceIn {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    70% {
+      transform: scale(0.9);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  @keyframes pulseGreen {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility title-large {
+  @apply font-display text-earth-900 dark:text-dark-text-primary text-6xl font-bold;
+}
+
+@utility title-medium {
+  @apply font-display text-earth-900 dark:text-dark-text-primary text-4xl font-semibold;
+}
+
+@utility title-small {
+  @apply font-display text-earth-900 dark:text-dark-text-primary text-2xl font-semibold;
+}
+
+@utility card {
+  @apply dark:border-dark-border dark:bg-dark-surface-elevated rounded-2xl border border-green-200/50 bg-white/80 shadow-lg shadow-green-100/50 backdrop-blur-sm dark:shadow-black/50;
+}
+
+@utility card-hover {
+  @apply card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-green-200/50 dark:hover:shadow-black/70;
+}
+
+@utility btn-primary {
+  @apply rounded-xl bg-gradient-to-r from-green-500 to-green-600 px-6 py-3 font-medium text-white shadow-lg shadow-green-200/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-green-300/50 active:translate-y-0;
+}
+
+@utility btn-secondary {
+  @apply dark:border-dark-border dark:bg-dark-surface dark:text-dark-text-primary dark:hover:bg-dark-surface-elevated rounded-xl border border-green-200 bg-white/80 px-6 py-3 font-medium text-green-700 backdrop-blur-sm transition-all duration-300 hover:border-green-300 hover:bg-green-50 dark:hover:border-green-400;
+}
+
+@utility input-field {
+  @apply dark:border-dark-border dark:bg-dark-surface text-earth-900 dark:text-dark-text-primary w-full rounded-xl border border-green-200 bg-white/80 px-4 py-3 backdrop-blur-sm transition-all duration-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/50 focus:outline-none;
+}
+
+@utility badge {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-sm font-medium;
+}
+
+@utility badge-success {
+  @apply badge border border-green-200 bg-green-100 text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300;
+}
+
+@utility badge-warning {
+  @apply badge border border-yellow-200 bg-yellow-100 text-yellow-800 dark:border-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300;
+}
+
+@utility badge-info {
+  @apply badge border border-blue-200 bg-blue-100 text-blue-800 dark:border-blue-800 dark:bg-blue-900/30 dark:text-blue-300;
+}
+
+@utility progress-bar {
+  @apply h-2 w-full overflow-hidden rounded-full bg-green-100 dark:bg-green-900/30;
+}
+
+@utility progress-fill {
+  @apply h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500 ease-out dark:from-green-500 dark:to-green-600;
+}
+
+@utility glass-effect {
+  @apply dark:border-dark-border/50 dark:bg-dark-surface/50 border border-white/20 bg-white/10 backdrop-blur-md;
+}
+
+@utility floating {
+  @apply animate-float;
+}
+
+@utility pulse-green {
+  @apply animate-pulse-green;
+}
+
+@utility text-gradient {
+  @apply bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent;
+}
+
+@utility bg-gradient-green {
+  @apply bg-gradient-to-br from-green-400 via-green-500 to-green-600;
+}
+
+@utility shadow-green {
+  @apply shadow-lg shadow-green-200/50;
+}
+
+@utility border-gradient {
+  @apply border-2 border-transparent bg-gradient-to-r from-green-400 to-green-600 bg-clip-border;
+}
+
+@layer base {
+  body {
+    @apply text-earth-900 dark:text-dark-text-primary dark:from-dark-bg dark:to-dark-surface bg-gradient-to-br from-green-50 to-green-100 font-sans;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 :root {
-    --color-fgcolor-neutral-primary: #2D2D31;
-    --neutral-50: #EDEDF0;
-    --neutral-100: #E4E4E7;
-    --neutral-200: #D8D8DB;
-    --neutral-250: #C3C3C6;
-    --neutral-300: #ADADB0;
-    --neutral-500: #818186;
-    --neutral-750: #414146;
-    --neutral-800: #2D2D31;
-    --neutral-850: #1D1D21;
-    --neutral-900: #19191C;
-    --neutral-900-80: #19191CCC;
+  /* Legacy neutral colors for compatibility */
+  --color-fgcolor-neutral-primary: #2d2d31;
+  --neutral-50: #ededf0;
+  --neutral-100: #e4e4e7;
+  --neutral-200: #d8d8db;
+  --neutral-250: #c3c3c6;
+  --neutral-300: #adadb0;
+  --neutral-500: #818186;
+  --neutral-750: #414146;
+  --neutral-800: #2d2d31;
+  --neutral-850: #1d1d21;
+  --neutral-900: #19191c;
+  --neutral-900-80: #19191ccc;
+
+  /* Green theme variables */
+  --green-primary: #22c55e;
+  --green-secondary: #16a34a;
+  --green-accent: #4ade80;
+  --earth-primary: #1c1917;
+  --earth-secondary: #44403c;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-
-    }
-}
-
-body {
-    color: var(--neutral-250);
-    background: var(--neutral-900);
-    font-family: Arial, Helvetica, sans-serif;
-}
+/* Dark theme is now handled through Tailwind's dark: prefix */
