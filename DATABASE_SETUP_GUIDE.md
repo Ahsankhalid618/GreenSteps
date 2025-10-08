@@ -74,21 +74,45 @@ The "Database not found" error occurs because the Appwrite database and collecti
 **Attributes:**
 - `title` (String, 255 chars, Required)
 - `description` (String, 1000 chars, Required)
+- `type` (Enum: community, personal, Required)
 - `category` (String, 50 chars, Required)
 - `difficulty` (Enum: easy, medium, hard, Required)
 - `points` (Integer, Required)
+- `requirements` (String, 2000 chars, Required)
 - `startDate` (DateTime, Required)
 - `endDate` (DateTime, Required)
 - `maxParticipants` (Integer, Optional)
 - `currentParticipants` (Integer, Required, Default: 0)
-- `isActive` (Boolean, Required, Default: true)
-- `requirements` (String, 1000 chars, Optional)
+- `createdBy` (String, 255 chars, Required)
+- `status` (Enum: active, completed, upcoming, expired, Required)
+- `icon` (String, 255 chars, Required)
+- `color` (String, 50 chars, Required)
+- `bgColor` (String, 50 chars, Required)
 
 **Permissions:**
 - Read: Any
-- Create: Any
-- Update: Any
-- Delete: Any
+- Create: Users
+- Update: Users
+- Delete: Users
+
+#### Challenge Progress Collection
+- Collection ID: `challenge_progress`
+- Name: `Challenge Progress`
+- Description: `User progress in challenges`
+
+**Attributes:**
+- `challengeId` (String, 255 chars, Required)
+- `userId` (String, 255 chars, Required)
+- `progress` (Integer, Required, Default: 0)
+- `completedRequirements` (String, 2000 chars, Required)
+- `joinedAt` (DateTime, Required)
+- `completedAt` (DateTime, Optional)
+
+**Permissions:**
+- Read: Users
+- Create: Users
+- Update: Users
+- Delete: Users
 
 #### Badges Collection
 - Collection ID: `badges`
@@ -168,9 +192,10 @@ After setting up the database:
 
 1. Go to your Appwrite console
 2. Navigate to Databases → greensteps
-3. Verify all 6 collections are created
+3. Verify all 7 collections are created (actions, users, challenges, challenge_progress, badges, achievements, leaderboard)
 4. Check that permissions are set correctly
 5. Test the actions page at `/dashboard/actions`
+6. Test the challenges page at `/dashboard/challenges`
 
 ## Troubleshooting
 
