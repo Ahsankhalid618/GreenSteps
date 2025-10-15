@@ -24,7 +24,7 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="dark:bg-dark-surface/80 dark:border-dark-border sticky top-0 z-30 border-b border-green-200 bg-white/80 backdrop-blur-sm"
+      className="border-earth-300 dark:border-dark-border dark:bg-dark-surface/80 sticky top-0 z-30 border-b bg-white/80 shadow-sm backdrop-blur-xl"
     >
       <div className="px-4 py-3 lg:px-6">
         <div className="flex items-center justify-between">
@@ -35,31 +35,29 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onMenuClick}
-              className="text-earth-600 dark:text-dark-text-secondary rounded-lg p-2 transition-colors hover:bg-green-100 lg:hidden dark:hover:bg-green-900/20"
+              className="hover:bg-earth-100 dark:hover:bg-dark-surface-elevated text-earth-700 dark:text-dark-text-secondary rounded-lg p-2 transition-colors lg:hidden"
             >
               <Menu className="h-5 w-5" />
             </motion.button>
 
             {/* User greeting */}
             <div className="hidden sm:block">
-              <h1 className="text-earth-900 dark:text-dark-text-primary text-lg font-semibold">
+              <h1 className="text-white/80 text-lg font-bold">
                 Welcome back, {user?.name}!
               </h1>
-              <p className="text-earth-600 dark:text-dark-text-secondary text-sm">
-                Ready to make a positive impact today?
-              </p>
+              <p className="body-sm">Ready to make a positive impact today?</p>
             </div>
           </div>
 
           {/* Center - Stats */}
-          <div className="hidden items-center space-x-6 md:flex">
+          <div className="hidden items-center space-x-4 md:flex">
             {/* Points */}
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center space-x-2 rounded-lg bg-green-100 px-3 py-2 dark:bg-green-900/30"
+              className="gradient-green flex items-center gap-2 rounded-xl px-4 py-2.5 shadow-md"
             >
-              <Trophy className="h-4 w-4 text-green-600 dark:text-green-400" />
-              <span className="text-sm font-medium text-green-700 dark:text-green-300">
+              <Trophy className="h-4 w-4 text-white" />
+              <span className="text-sm font-semibold text-white">
                 {mockStats.points.toLocaleString()} pts
               </span>
             </motion.div>
@@ -67,10 +65,10 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
             {/* Streak */}
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center space-x-2 rounded-lg bg-orange-100 px-3 py-2 dark:bg-orange-900/30"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2.5 shadow-md"
             >
-              <Flame className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-              <span className="text-sm font-medium text-orange-700 dark:text-orange-300">
+              <Flame className="h-4 w-4 text-white" />
+              <span className="text-sm font-semibold text-white">
                 {mockStats.streak} day streak
               </span>
             </motion.div>
@@ -78,10 +76,10 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
             {/* Level */}
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="flex items-center space-x-2 rounded-lg bg-purple-100 px-3 py-2 dark:bg-purple-900/30"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 px-4 py-2.5 shadow-md"
             >
-              <Zap className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-              <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
+              <Zap className="h-4 w-4 text-white" />
+              <span className="text-sm font-semibold text-white">
                 Level {mockStats.level}
               </span>
             </motion.div>
@@ -89,26 +87,24 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
         </div>
 
         {/* Mobile stats */}
-        <div className="mt-3 flex items-center justify-between md:hidden">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-1">
-              <Trophy className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium text-green-700">
-                {mockStats.points.toLocaleString()}
-              </span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Flame className="h-4 w-4 text-orange-600" />
-              <span className="text-sm font-medium text-orange-700">
-                {mockStats.streak}
-              </span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <Zap className="h-4 w-4 text-purple-600" />
-              <span className="text-sm font-medium text-purple-700">
-                L{mockStats.level}
-              </span>
-            </div>
+        <div className="mt-3 flex items-center justify-between gap-2 md:hidden">
+          <div className="gradient-green flex flex-1 items-center gap-1.5 rounded-lg px-3 py-2">
+            <Trophy className="h-4 w-4 text-white" />
+            <span className="text-sm font-medium text-white">
+              {mockStats.points.toLocaleString()}
+            </span>
+          </div>
+          <div className="flex flex-1 items-center gap-1.5 rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 px-3 py-2">
+            <Flame className="h-4 w-4 text-white" />
+            <span className="text-sm font-medium text-white">
+              {mockStats.streak}
+            </span>
+          </div>
+          <div className="flex flex-1 items-center gap-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-violet-500 px-3 py-2">
+            <Zap className="h-4 w-4 text-white" />
+            <span className="text-sm font-medium text-white">
+              Lv.{mockStats.level}
+            </span>
           </div>
         </div>
       </div>

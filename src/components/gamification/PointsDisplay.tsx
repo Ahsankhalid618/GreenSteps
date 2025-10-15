@@ -55,11 +55,13 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
   };
 
   const content = (
-    <Card className={sizes[size].card} variant="elevated">
+    <div
+      className={`${sizes[size].card} group rounded-2xl border border-white/10 bg-white/[0.02] shadow-lg shadow-black/20 backdrop-blur-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-green-500/10`}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <motion.div
-            className="rounded-full bg-gradient-to-r from-green-400 to-green-500 p-2"
+            className="gradient-green rounded-full p-3 shadow-lg"
             animate={animate ? { rotate: [0, 10, -10, 0] } : {}}
             transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
           >
@@ -69,7 +71,7 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
             <h3 className={`${sizes[size].points} text-gradient font-bold`}>
               {formatNumber(points)}
             </h3>
-            <p className={`${sizes[size].level} text-earth-600`}>
+            <p className={`${sizes[size].level} body-md`}>
               Level {currentLevel}
             </p>
           </div>
@@ -77,8 +79,8 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
 
         {showBadges && badges.length > 0 && (
           <div className="flex items-center space-x-2">
-            <Trophy className={`${sizes[size].icon} text-yellow-500`} />
-            <span className="text-earth-600 text-sm">{badges.length}</span>
+            <Trophy className={`${sizes[size].icon} text-amber-500`} />
+            <span className="body-sm font-semibold">{badges.length}</span>
           </div>
         )}
       </div>
@@ -91,7 +93,7 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
             showLabel={false}
             animate={animate}
           />
-          <div className="text-earth-600 flex justify-between text-sm">
+          <div className="body-sm flex justify-between">
             <span>Level {currentLevel}</span>
             <span>{formatNumber(pointsToNextLevel)} to next level</span>
           </div>
@@ -99,12 +101,10 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
       )}
 
       {showBadges && badges.length > 0 && (
-        <div className="mt-4 border-t border-green-200 pt-4">
+        <div className="border-earth-300 dark:border-dark-border mt-4 border-t pt-4">
           <div className="mb-2 flex items-center space-x-2">
             <Zap className="h-4 w-4 text-green-500" />
-            <span className="text-earth-700 text-sm font-medium">
-              Recent Badges
-            </span>
+            <span className="body-sm font-medium">Recent Badges</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {badges.slice(0, 3).map((badge, index) => (
@@ -120,7 +120,7 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 
   if (animate) {

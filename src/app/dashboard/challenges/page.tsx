@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-// import { useAuthContext } from "@/components/providers/AuthProvider";
 import { Card, CardHeader, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -22,6 +21,10 @@ import {
   Leaf,
   Zap,
   TrendingUp,
+  Award,
+  Flame,
+  Droplet,
+  Recycle,
 } from "lucide-react";
 
 interface Challenge {
@@ -46,14 +49,13 @@ interface Challenge {
 }
 
 export default function ChallengesPage() {
-  // const { user } = useAuthContext();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Mock data - replace with real data from Appwrite
+  // Mock data
   const mockChallenges: Challenge[] = useMemo(
     () => [
       {
@@ -79,8 +81,8 @@ export default function ChallengesPage() {
         progress: 65,
         status: "active",
         icon: Leaf,
-        color: "text-green-600",
-        bgColor: "bg-green-100",
+        color: "text-green-500",
+        bgColor: "bg-green-500/10",
       },
       {
         id: "2",
@@ -104,9 +106,9 @@ export default function ChallengesPage() {
         isJoined: false,
         progress: 0,
         status: "upcoming",
-        icon: Target,
-        color: "text-blue-600",
-        bgColor: "bg-blue-100",
+        icon: Recycle,
+        color: "text-blue-500",
+        bgColor: "bg-blue-500/10",
       },
       {
         id: "3",
@@ -131,8 +133,8 @@ export default function ChallengesPage() {
         progress: 40,
         status: "active",
         icon: Zap,
-        color: "text-yellow-600",
-        bgColor: "bg-yellow-100",
+        color: "text-yellow-500",
+        bgColor: "bg-yellow-500/10",
       },
       {
         id: "4",
@@ -149,127 +151,97 @@ export default function ChallengesPage() {
           "Use greywater for plants",
           "Take 5-minute showers max",
         ],
-        startDate: "2024-01-05",
-        endDate: "2024-01-19",
+        startDate: "2024-01-12",
+        endDate: "2024-02-12",
         maxParticipants: 75,
         currentParticipants: 45,
-        isJoined: false,
-        progress: 0,
+        isJoined: true,
+        progress: 80,
         status: "active",
-        icon: TrendingUp,
-        color: "text-cyan-600",
-        bgColor: "bg-cyan-100",
+        icon: Droplet,
+        color: "text-cyan-500",
+        bgColor: "bg-cyan-500/10",
       },
     ],
     [],
   );
 
-  const categories = [
-    { id: "all", name: "All Categories", icon: Target },
-    { id: "Transportation", name: "Transportation", icon: Users },
-    { id: "Energy", name: "Energy", icon: Zap },
-    { id: "Waste", name: "Waste", icon: Target },
-    { id: "Water", name: "Water", icon: TrendingUp },
-  ];
-
-  const filters = [
-    { id: "all", name: "All Challenges" },
-    { id: "active", name: "Active" },
-    { id: "upcoming", name: "Upcoming" },
-    { id: "completed", name: "Completed" },
-    { id: "joined", name: "My Challenges" },
-  ];
-
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
+    const loadChallenges = async () => {
+      setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 500));
       setChallenges(mockChallenges);
       setLoading(false);
-    }, 1000);
+    };
 
-    return () => clearTimeout(timer);
+    loadChallenges();
   }, [mockChallenges]);
 
-  const filteredChallenges = challenges.filter((challenge) => {
-    const matchesSearch =
-      challenge.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      challenge.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredChallenges = useMemo(() => {
+    return challenges.filter((challenge) => {
+      const matchesSearch =
+        challenge.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        challenge.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesFilter =
-      selectedFilter === "all" ||
-      (selectedFilter === "joined"
-        ? challenge.isJoined
-        : challenge.status === selectedFilter);
+      const matchesFilter =
+        selectedFilter === "all" || challenge.status === selectedFilter;
 
-    const matchesCategory =
-      selectedCategory === "all" || challenge.category === selectedCategory;
+      const matchesCategory =
+        selectedCategory === "all" || challenge.category === selectedCategory;
 
-    return matchesSearch && matchesFilter && matchesCategory;
-  });
+      return matchesSearch && matchesFilter && matchesCategory;
+    });
+  }, [challenges, searchTerm, selectedFilter, selectedCategory]);
 
-  const handleJoinChallenge = async (challengeId: string) => {
+  const stats = [
+    {
+      label: "Active Challenges",
+      value: challenges.filter((c) => c.isJoined && c.status === "active")
+        .length,
+      icon: Flame,
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+    },
+    {
+      label: "Total Points",
+      value: challenges
+        .filter((c) => c.isJoined)
+        .reduce((sum, c) => sum + c.points, 0),
+      icon: Star,
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-500/10",
+    },
+    {
+      label: "Completed",
+      value: challenges.filter((c) => c.status === "completed").length,
+      icon: CheckCircle,
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+    },
+    {
+      label: "Community",
+      value: challenges.filter((c) => c.type === "community").length,
+      icon: Users,
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+    },
+  ];
+
+  const handleJoinChallenge = (challengeId: string) => {
     setChallenges((prev) =>
-      prev.map((challenge) =>
-        challenge.id === challengeId
+      prev.map((c) =>
+        c.id === challengeId
           ? {
-              ...challenge,
-              isJoined: true,
-              currentParticipants: challenge.currentParticipants + 1,
+              ...c,
+              isJoined: !c.isJoined,
+              currentParticipants: c.isJoined
+                ? c.currentParticipants - 1
+                : c.currentParticipants + 1,
             }
-          : challenge,
+          : c,
       ),
     );
   };
-
-  const handleLeaveChallenge = async (challengeId: string) => {
-    setChallenges((prev) =>
-      prev.map((challenge) =>
-        challenge.id === challengeId
-          ? {
-              ...challenge,
-              isJoined: false,
-              currentParticipants: challenge.currentParticipants - 1,
-            }
-          : challenge,
-      ),
-    );
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "easy":
-        return "text-green-600 bg-green-100";
-      case "medium":
-        return "text-yellow-600 bg-yellow-100";
-      case "hard":
-        return "text-red-600 bg-red-100";
-      default:
-        return "text-gray-600 bg-gray-100";
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "text-green-600 bg-green-100";
-      case "upcoming":
-        return "text-blue-600 bg-blue-100";
-      case "completed":
-        return "text-purple-600 bg-purple-100";
-      case "expired":
-        return "text-gray-600 bg-gray-100";
-      default:
-        return "text-gray-600 bg-gray-100";
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex min-h-96 items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-green-500"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -278,95 +250,79 @@ export default function ChallengesPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-lg shadow-black/20 backdrop-blur-2xl"
       >
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-earth-900 dark:text-dark-text-primary text-3xl font-bold">
-              Challenges
-            </h1>
-            <p className="text-earth-600 dark:text-dark-text-secondary mt-2">
-              Join community challenges and create personal goals to make a
-              positive impact.
-            </p>
-          </div>
-          <Button icon={<Plus className="h-4 w-4" />}>
-            Create Personal Challenge
-          </Button>
-        </div>
+        <h1 className="mb-2 text-3xl font-bold text-white">Eco Challenges</h1>
+        <p className="text-white/60">
+          Join challenges, compete with others, and make a bigger environmental
+          impact
+        </p>
       </motion.div>
 
-      {/* Filters and Search */}
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {stats.map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
+            className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 backdrop-blur-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04]"
+          >
+            <div
+              className={`mb-3 inline-flex rounded-full p-3 ${stat.bgColor}`}
+            >
+              <stat.icon className={`h-5 w-5 ${stat.color}`} />
+            </div>
+            <div className="text-2xl font-bold text-white">{stat.value}</div>
+            <div className="text-sm text-white/60">{stat.label}</div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Filters */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="space-y-4"
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-lg shadow-black/20 backdrop-blur-2xl"
       >
-        {/* Search */}
-        <div className="relative">
-          <Search className="text-earth-400 absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform" />
-          <Input
-            placeholder="Search challenges..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4">
-          {/* Status Filter */}
-          <div className="flex items-center space-x-2">
-            <Filter className="text-earth-500 h-4 w-4" />
-            <div className="flex space-x-1">
-              {filters.map((filter) => (
-                <button
-                  key={filter.id}
-                  onClick={() => setSelectedFilter(filter.id)}
-                  className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-                    selectedFilter === filter.id
-                      ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                      : "text-earth-600 dark:text-dark-text-secondary hover:bg-green-50 dark:hover:bg-green-900/20"
-                  }`}
-                >
-                  {filter.name}
-                </button>
-              ))}
-            </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="relative">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-white/40" />
+            <Input
+              placeholder="Search challenges..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
-
-          {/* Category Filter */}
-          <div className="flex items-center space-x-2">
-            <span className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-              Category:
-            </span>
-            <div className="flex space-x-1">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`flex items-center space-x-1 rounded-full px-3 py-1 text-sm font-medium transition-colors ${
-                    selectedCategory === category.id
-                      ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                      : "text-earth-600 dark:text-dark-text-secondary hover:bg-green-50 dark:hover:bg-green-900/20"
-                  }`}
-                >
-                  <category.icon className="h-3 w-3" />
-                  <span>{category.name}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+          <select
+            value={selectedFilter}
+            onChange={(e) => setSelectedFilter(e.target.value)}
+            className="rounded-lg border border-white/10 bg-white/[0.05] px-4 py-2 text-white backdrop-blur-sm focus:border-green-500 focus:ring-2 focus:ring-green-500/50 focus:outline-none"
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="completed">Completed</option>
+          </select>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="rounded-lg border border-white/10 bg-white/[0.05] px-4 py-2 text-white backdrop-blur-sm focus:border-green-500 focus:ring-2 focus:ring-green-500/50 focus:outline-none"
+          >
+            <option value="all">All Categories</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Energy">Energy</option>
+            <option value="Water">Water</option>
+            <option value="Waste">Waste</option>
+          </select>
         </div>
       </motion.div>
 
       {/* Challenges Grid */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3"
-      >
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <AnimatePresence>
           {filteredChallenges.map((challenge, index) => (
             <motion.div
@@ -374,181 +330,114 @@ export default function ChallengesPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-lg shadow-black/20 backdrop-blur-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04]"
             >
-              <Card hover className="h-full">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className={`rounded-lg p-2 ${challenge.bgColor}`}>
-                        <challenge.icon
-                          className={`h-5 w-5 ${challenge.color}`}
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-earth-900 dark:text-dark-text-primary text-lg font-semibold">
-                          {challenge.title}
-                        </h3>
-                        <div className="mt-1 flex items-center space-x-2">
-                          <Badge
-                            variant="outline"
-                            className={getDifficultyColor(challenge.difficulty)}
-                          >
-                            {challenge.difficulty}
-                          </Badge>
-                          <Badge
-                            variant="outline"
-                            className={getStatusColor(challenge.status)}
-                          >
-                            {challenge.status}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                        {challenge.points}
-                      </div>
-                      <div className="text-earth-500 text-xs">points</div>
-                    </div>
+              <div className="mb-4 flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`rounded-lg p-3 ${challenge.bgColor}`}>
+                    <challenge.icon className={`h-6 w-6 ${challenge.color}`} />
                   </div>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  <p className="text-earth-600 dark:text-dark-text-secondary text-sm">
-                    {challenge.description}
-                  </p>
-
-                  {/* Progress */}
-                  {challenge.isJoined && (
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-earth-600 dark:text-dark-text-secondary">
-                          Progress
-                        </span>
-                        <span className="text-earth-900 dark:text-dark-text-primary font-medium">
-                          {challenge.progress}%
-                        </span>
-                      </div>
-                      <ProgressBar
-                        value={challenge.progress}
-                        variant="gradient"
-                        showLabel={false}
-                      />
-                    </div>
-                  )}
-
-                  {/* Requirements */}
-                  <div className="space-y-2">
-                    <h4 className="text-earth-900 dark:text-dark-text-primary text-sm font-medium">
-                      Requirements:
-                    </h4>
-                    <ul className="space-y-1">
-                      {challenge.requirements
-                        .slice(0, 3)
-                        .map((requirement, idx) => (
-                          <li
-                            key={idx}
-                            className="text-earth-600 dark:text-dark-text-secondary flex items-start space-x-2 text-sm"
-                          >
-                            <CheckCircle className="mt-0.5 h-3 w-3 flex-shrink-0 text-green-500" />
-                            <span>{requirement}</span>
-                          </li>
-                        ))}
-                      {challenge.requirements.length > 3 && (
-                        <li className="text-earth-500 text-xs">
-                          +{challenge.requirements.length - 3} more requirements
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-
-                  {/* Challenge Info */}
-                  <div className="text-earth-500 dark:text-dark-text-muted flex items-center justify-between text-sm">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>
-                          {new Date(challenge.startDate).toLocaleDateString()}
-                        </span>
-                      </div>
-                      {challenge.type === "community" && (
-                        <div className="flex items-center space-x-1">
-                          <Users className="h-3 w-3" />
-                          <span>
-                            {challenge.currentParticipants}/
-                            {challenge.maxParticipants}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-3 w-3" />
-                      <span>
-                        {Math.ceil(
-                          (new Date(challenge.endDate).getTime() -
-                            new Date().getTime()) /
-                            (1000 * 60 * 60 * 24),
-                        )}{" "}
-                        days left
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <div className="dark:border-dark-border border-t border-green-200 pt-4">
-                    {challenge.isJoined ? (
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          fullWidth
-                          onClick={() => handleLeaveChallenge(challenge.id)}
-                          className="text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
-                        >
-                          Leave Challenge
-                        </Button>
-                        <Button fullWidth icon={<Trophy className="h-4 w-4" />}>
-                          View Progress
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button
-                        fullWidth
-                        onClick={() => handleJoinChallenge(challenge.id)}
-                        disabled={
-                          challenge.status !== "active" &&
-                          challenge.status !== "upcoming"
-                        }
-                        icon={<Star className="h-4 w-4" />}
+                  <div>
+                    <h3 className="text-lg font-bold text-white">
+                      {challenge.title}
+                    </h3>
+                    <div className="mt-1 flex items-center gap-2">
+                      <Badge
+                        className={`text-xs ${challenge.type === "community" ? "bg-blue-500/20 text-blue-400" : "bg-purple-500/20 text-purple-400"}`}
                       >
-                        {challenge.status === "upcoming"
-                          ? "Join When Available"
-                          : "Join Challenge"}
-                      </Button>
-                    )}
+                        {challenge.type}
+                      </Badge>
+                      <Badge className="bg-white/10 text-xs text-white/80">
+                        {challenge.difficulty}
+                      </Badge>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="text-right">
+                  <div className="flex items-center gap-1 text-lg font-bold text-green-400">
+                    <Star className="h-4 w-4" />
+                    {challenge.points}
+                  </div>
+                </div>
+              </div>
+
+              <p className="mb-4 text-sm text-white/60">
+                {challenge.description}
+              </p>
+
+              {/* Progress */}
+              {challenge.isJoined && (
+                <div className="mb-4">
+                  <div className="mb-2 flex items-center justify-between text-sm">
+                    <span className="text-white/80">Progress</span>
+                    <span className="font-semibold text-green-400">
+                      {challenge.progress}%
+                    </span>
+                  </div>
+                  <ProgressBar value={challenge.progress} variant="gradient" />
+                </div>
+              )}
+
+              {/* Requirements */}
+              <div className="mb-4 space-y-2">
+                <h4 className="text-sm font-semibold text-white/80">
+                  Requirements:
+                </h4>
+                <ul className="space-y-1">
+                  {challenge.requirements.slice(0, 2).map((req, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-xs text-white/60"
+                    >
+                      <CheckCircle className="mt-0.5 h-3 w-3 flex-shrink-0 text-green-500" />
+                      {req}
+                    </li>
+                  ))}
+                  {challenge.requirements.length > 2 && (
+                    <li className="text-xs text-white/40">
+                      +{challenge.requirements.length - 2} more...
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between border-t border-white/10 pt-4">
+                <div className="flex items-center gap-4 text-xs text-white/60">
+                  <div className="flex items-center gap-1">
+                    <Users className="h-3 w-3" />
+                    {challenge.currentParticipants}/
+                    {challenge.maxParticipants || "∞"}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {new Date(challenge.endDate).toLocaleDateString()}
+                  </div>
+                </div>
+                <Button
+                  size="sm"
+                  variant={challenge.isJoined ? "outline" : "primary"}
+                  onClick={() => handleJoinChallenge(challenge.id)}
+                >
+                  {challenge.isJoined ? "Leave" : "Join"}
+                </Button>
+              </div>
             </motion.div>
           ))}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
-      {/* Empty State */}
       {filteredChallenges.length === 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="py-12 text-center"
-        >
-          <Target className="text-earth-400 mx-auto mb-4 h-12 w-12" />
-          <h3 className="text-earth-900 dark:text-dark-text-primary mb-2 text-lg font-medium">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-12 text-center shadow-lg shadow-black/20 backdrop-blur-2xl">
+          <Target className="mx-auto mb-4 h-12 w-12 text-white/40" />
+          <h3 className="mb-2 text-lg font-semibold text-white">
             No challenges found
           </h3>
-          <p className="text-earth-600 dark:text-dark-text-secondary">
-            Try adjusting your search or filter criteria.
+          <p className="text-white/60">
+            Try adjusting your filters or search term
           </p>
-        </motion.div>
+        </div>
       )}
     </div>
   );

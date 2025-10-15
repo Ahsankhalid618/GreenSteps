@@ -76,14 +76,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         transition={{ duration: 0.3 }}
         className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col"
       >
-        <div className="dark:bg-dark-surface/80 dark:border-dark-border flex grow flex-col gap-y-5 overflow-y-auto border-r border-green-200 bg-white/80 px-6 pb-4 backdrop-blur-sm">
+        <div className="border-earth-300 dark:border-dark-border dark:bg-dark-surface/80 flex grow flex-col gap-y-5 overflow-y-auto border-r bg-white/80 px-6 pb-4 backdrop-blur-xl">
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center">
             <Link href="/dashboard" className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-green-400 to-green-500">
-                <Leaf className="h-5 w-5 text-white" />
+              <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-xl shadow-lg">
+                <Leaf className="h-6 w-6 text-white" />
               </div>
-              <span className="text-earth-900 dark:text-dark-text-primary text-xl font-bold">
+              <span className="text-gradient text-xl font-bold">
                 GreenSteps
               </span>
             </Link>
@@ -104,19 +104,13 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                         >
                           <Link
                             href={item.href}
-                            className={`group flex gap-x-3 rounded-lg p-3 text-sm leading-6 font-semibold transition-colors ${
+                            className={
                               isActive
-                                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                                : "text-earth-700 dark:text-dark-text-secondary hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-300"
-                            }`}
+                                ? "sidebar-nav-item-active"
+                                : "sidebar-nav-item"
+                            }
                           >
-                            <item.icon
-                              className={`h-5 w-5 shrink-0 ${
-                                isActive
-                                  ? "text-green-600 dark:text-green-400"
-                                  : "text-earth-400 dark:text-dark-text-muted group-hover:text-green-600 dark:group-hover:text-green-400"
-                              }`}
-                            />
+                            <item.icon className="h-5 w-5 shrink-0" />
                             <span className="truncate">{item.name}</span>
                           </Link>
                         </motion.div>
@@ -128,29 +122,29 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
               {/* User section */}
               <li className="mt-auto">
-                <div className="dark:border-dark-border border-t border-green-200 pt-4">
-                  <div className="mb-4 flex items-center space-x-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-green-500">
-                      <User className="h-4 w-4 text-white" />
+                <div className="border-earth-300 dark:border-dark-border border-t pt-4">
+                  <div className="to-sage-50 dark:from-forest-900 dark:to-dark-surface mb-4 flex items-center space-x-3 rounded-xl bg-gradient-to-r from-green-50 p-3">
+                    <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-full shadow-md">
+                      <User className="h-5 w-5 text-white" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-earth-900 dark:text-dark-text-primary truncate text-sm font-medium">
+                      <p className="text-earth-900 dark:text-dark-text-primary truncate text-sm font-semibold">
                         {user?.name}
                       </p>
-                      <p className="text-earth-600 dark:text-dark-text-secondary truncate text-xs">
+                      <p className="text-earth-600 dark:text-dark-text-muted truncate text-xs">
                         {user?.email}
                       </p>
                     </div>
                   </div>
 
                   <LogoutButton
-                    variant="ghost"
+                    variant="destructive"
                     fullWidth
                     showConfirmation={false}
-                    className="justify-start text-left text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
+                    className="btn-danger w-full justify-center"
                     icon={<LogOut className="h-4 w-4" />}
                   >
-                    Logout
+                    Sign Out
                   </LogoutButton>
                 </div>
               </li>
@@ -169,14 +163,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             transition={{ duration: 0.3 }}
             className="fixed inset-y-0 z-50 flex w-64 flex-col lg:hidden"
           >
-            <div className="dark:bg-dark-surface dark:border-dark-border flex grow flex-col gap-y-5 overflow-y-auto border-r border-green-200 bg-white px-6 pb-4">
+            <div className="border-earth-300 dark:border-dark-border dark:bg-dark-surface flex grow flex-col gap-y-5 overflow-y-auto border-r bg-white px-6 pb-4">
               {/* Header with close button */}
               <div className="flex h-16 shrink-0 items-center justify-between">
                 <Link href="/dashboard" className="flex items-center space-x-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-green-400 to-green-500">
-                    <Leaf className="h-5 w-5 text-white" />
+                  <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-xl shadow-lg">
+                    <Leaf className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-earth-900 dark:text-dark-text-primary text-xl font-bold">
+                  <span className="text-gradient text-xl font-bold">
                     GreenSteps
                   </span>
                 </Link>
@@ -184,7 +178,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={onClose}
-                  className="text-earth-600 dark:text-dark-text-secondary rounded-lg p-2 transition-colors hover:bg-green-100 dark:hover:bg-green-900/20"
+                  className="hover:bg-earth-100 dark:hover:bg-dark-surface-elevated text-earth-700 dark:text-dark-text-secondary rounded-lg p-2 transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </motion.button>
@@ -206,19 +200,13 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                               <Link
                                 href={item.href}
                                 onClick={onClose}
-                                className={`group flex gap-x-3 rounded-lg p-3 text-sm leading-6 font-semibold transition-colors ${
+                                className={
                                   isActive
-                                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                                    : "text-earth-700 dark:text-dark-text-secondary hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-300"
-                                }`}
+                                    ? "sidebar-nav-item-active"
+                                    : "sidebar-nav-item"
+                                }
                               >
-                                <item.icon
-                                  className={`h-5 w-5 shrink-0 ${
-                                    isActive
-                                      ? "text-green-600 dark:text-green-400"
-                                      : "text-earth-400 dark:text-dark-text-muted group-hover:text-green-600 dark:group-hover:text-green-400"
-                                  }`}
-                                />
+                                <item.icon className="h-5 w-5 shrink-0" />
                                 <span className="truncate">{item.name}</span>
                               </Link>
                             </motion.div>
@@ -230,26 +218,26 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
                   {/* User section */}
                   <li className="mt-auto">
-                    <div className="dark:border-dark-border border-t border-green-200 pt-4">
-                      <div className="mb-4 flex items-center space-x-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-green-500">
-                          <User className="h-4 w-4 text-white" />
+                    <div className="border-earth-300 dark:border-dark-border border-t pt-4">
+                      <div className="to-sage-50 dark:from-forest-900 dark:to-dark-surface mb-4 flex items-center space-x-3 rounded-xl bg-gradient-to-r from-green-50 p-3">
+                        <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-full shadow-md">
+                          <User className="h-5 w-5 text-white" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-earth-900 dark:text-dark-text-primary truncate text-sm font-medium">
+                          <p className="text-earth-900 dark:text-dark-text-primary truncate text-sm font-semibold">
                             {user?.name}
                           </p>
-                          <p className="text-earth-600 dark:text-dark-text-secondary truncate text-xs">
+                          <p className="text-earth-600 dark:text-dark-text-muted truncate text-xs">
                             {user?.email}
                           </p>
                         </div>
                       </div>
 
                       <LogoutButton
-                        variant="ghost"
+                        variant="destructive"
                         fullWidth
                         showConfirmation={false}
-                        className="justify-start text-left text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
+                        className="btn-danger w-full justify-center"
                         icon={<LogOut className="h-4 w-4" />}
                       >
                         Logout

@@ -20,6 +20,10 @@ import {
   Home,
   ShoppingBag,
   AlertCircle,
+  TrendingUp,
+  Award,
+  Calendar,
+  CheckCircle2,
 } from "lucide-react";
 import { z } from "zod";
 import {
@@ -255,31 +259,105 @@ export default function ActionsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-lg shadow-black/20 backdrop-blur-2xl"
       >
-        <h1 className="text-earth-900 dark:text-dark-text-primary mb-2 text-3xl font-bold">
-          Log Eco Actions
-        </h1>
-        <p className="text-earth-600 dark:text-dark-text-secondary">
+        <h1 className="mb-2 text-3xl font-bold text-white">Log Eco Actions</h1>
+        <p className="text-white/60">
           Track your environmental impact and earn points for sustainable
           actions
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        {/* Action Stats Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="lg:col-span-12"
+        >
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 backdrop-blur-2xl">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+              {actionCategories.map((category, index) => (
+                <motion.div
+                  key={category.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.2 + index * 0.05 }}
+                  className="cursor-pointer rounded-xl border border-white/10 bg-white/[0.02] p-3 backdrop-blur-sm transition-all hover:scale-105 hover:border-white/20 hover:bg-white/[0.04]"
+                  onClick={() => {
+                    setSelectedCategory(category.id);
+                    setValue("category", category.id);
+                  }}
+                >
+                  <div className="mb-2 inline-flex rounded-lg bg-white/5 p-2">
+                    <category.icon className={`h-4 w-4 ${category.color}`} />
+                  </div>
+                  <h4 className="mb-1 text-xs font-semibold text-white">
+                    {category.name}
+                  </h4>
+                  <p className="text-xs text-green-400">
+                    {category.basePoints} pts
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Today's Impact Summary */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="lg:col-span-3"
+        >
+          <div className="h-full rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 backdrop-blur-2xl">
+            <h3 className="mb-3 text-base font-bold text-white">
+              Today's Impact
+            </h3>
+            <div className="space-y-3">
+              <div className="rounded-lg bg-green-500/10 p-3">
+                <div className="mb-1 flex items-center gap-2">
+                  <Leaf className="h-4 w-4 text-green-400" />
+                  <span className="text-xs text-white/70">CO₂ Saved</span>
+                </div>
+                <p className="text-xl font-bold text-white">2.5 kg</p>
+              </div>
+              <div className="rounded-lg bg-blue-500/10 p-3">
+                <div className="mb-1 flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-blue-400" />
+                  <span className="text-xs text-white/70">Water Saved</span>
+                </div>
+                <p className="text-xl font-bold text-white">45 L</p>
+              </div>
+              <div className="rounded-lg bg-amber-500/10 p-3">
+                <div className="mb-1 flex items-center gap-2">
+                  <Recycle className="h-4 w-4 text-amber-400" />
+                  <span className="text-xs text-white/70">Waste Reduced</span>
+                </div>
+                <p className="text-xl font-bold text-white">1.2 kg</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Action Form */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="lg:col-span-1"
+          transition={{ duration: 0.5, delay: 0.25 }}
+          className="lg:col-span-6"
         >
-          <Card>
-            <CardHeader title="Log New Action" />
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 backdrop-blur-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04]">
+            <h3 className="mb-4 text-base font-bold text-white">
+              Log New Action
+            </h3>
             <CardContent>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
                 {/* Category Selection */}
                 <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary mb-2 block text-sm font-medium">
+                  <label className="mb-2 block text-xs font-medium text-white/80">
                     Category
                   </label>
                   <div className="grid grid-cols-2 gap-2">
@@ -293,26 +371,26 @@ export default function ActionsPage() {
                           setSelectedCategory(category.id);
                           setValue("category", category.id);
                         }}
-                        className={`rounded-lg border-2 p-3 transition-all ${
+                        className={`rounded-lg border p-2 transition-all ${
                           selectedCategory === category.id
-                            ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                            : "dark:border-dark-border border-green-200 hover:border-green-300"
+                            ? "border-green-500 bg-green-500/10"
+                            : "border-white/10 bg-white/[0.03] hover:border-white/20"
                         }`}
                       >
                         <category.icon
-                          className={`mx-auto mb-1 h-5 w-5 ${category.color}`}
+                          className={`mx-auto mb-1 h-4 w-4 ${category.color}`}
                         />
-                        <div className="text-earth-900 dark:text-dark-text-primary text-xs font-medium">
+                        <div className="text-xs font-medium text-white">
                           {category.name}
                         </div>
-                        <div className="text-earth-600 dark:text-dark-text-secondary text-xs">
+                        <div className="text-xs text-white/60">
                           {category.basePoints} pts
                         </div>
                       </motion.button>
                     ))}
                   </div>
                   {errors.category && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-xs text-red-400">
                       {errors.category.message}
                     </p>
                   )}
@@ -325,13 +403,13 @@ export default function ActionsPage() {
                     placeholder="Describe your eco-friendly action..."
                     {...register("description")}
                     error={errors.description?.message}
-                    rows={3}
+                    rows={2}
                   />
                 </div>
 
                 {/* Difficulty */}
                 <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary mb-2 block text-sm font-medium">
+                  <label className="mb-2 block text-xs font-medium text-white/80">
                     Difficulty
                   </label>
                   <div className="grid grid-cols-3 gap-2">
@@ -348,16 +426,16 @@ export default function ActionsPage() {
                               level as "easy" | "medium" | "hard",
                             )
                           }
-                          className={`rounded-lg border-2 p-2 capitalize transition-all ${
+                          className={`rounded-lg border p-2 capitalize transition-all ${
                             watchedDifficulty === level
-                              ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                              : "dark:border-dark-border border-green-200 hover:border-green-300"
+                              ? "border-green-500 bg-green-500/10"
+                              : "border-white/10 bg-white/[0.03] hover:border-white/20"
                           }`}
                         >
-                          <div className="text-earth-900 dark:text-dark-text-primary text-sm font-medium">
+                          <div className="text-xs font-medium text-white">
                             {level}
                           </div>
-                          <div className="text-earth-600 dark:text-dark-text-secondary text-xs">
+                          <div className="text-xs text-white/60">
                             {multiplier}x
                           </div>
                         </motion.button>
@@ -365,7 +443,7 @@ export default function ActionsPage() {
                     )}
                   </div>
                   {errors.difficulty && (
-                    <p className="mt-1 text-sm text-red-500">
+                    <p className="mt-1 text-xs text-red-400">
                       {errors.difficulty.message}
                     </p>
                   )}
@@ -376,13 +454,13 @@ export default function ActionsPage() {
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-lg bg-green-50 p-3 dark:bg-green-900/20"
+                    className="rounded-lg border border-green-500/20 bg-green-500/10 p-2"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                      <span className="text-xs font-medium text-white/80">
                         Points Earned:
                       </span>
-                      <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                      <span className="text-base font-bold text-green-400">
                         {calculatePoints(watchedCategory, watchedDifficulty)}
                       </span>
                     </div>
@@ -397,22 +475,71 @@ export default function ActionsPage() {
                   disabled={!selectedCategory || !watchedDifficulty}
                   icon={<Plus className="h-4 w-4" />}
                 >
-                  {submitting ? "Logging Action..." : "Log Action"}
+                  {submitting ? "Logging..." : "Log Action"}
                 </Button>
               </form>
             </CardContent>
-          </Card>
+          </div>
+        </motion.div>
+
+        {/* Monthly Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="lg:col-span-3"
+        >
+          <div className="h-full rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 backdrop-blur-2xl">
+            <h3 className="mb-3 text-base font-bold text-white">
+              Monthly Progress
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-white/70">Actions Logged</span>
+                <span className="text-lg font-bold text-white">
+                  {actions.length}/50
+                </span>
+              </div>
+              <div className="h-2 rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-green-600 to-green-400"
+                  style={{
+                    width: `${Math.min((actions.length / 50) * 100, 100)}%`,
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2 pt-2">
+                <div className="text-center">
+                  <div className="text-base font-bold text-green-400">42</div>
+                  <div className="text-xs text-white/60">This Month</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-base font-bold text-blue-400">650</div>
+                  <div className="text-xs text-white/60">Total Points</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-base font-bold text-amber-400">7</div>
+                  <div className="text-xs text-white/60">Day Streak</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Recent Actions */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="lg:col-span-2"
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="lg:col-span-12"
         >
-          <Card>
-            <CardHeader title="Recent Actions" />
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 backdrop-blur-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04]">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-base font-bold text-white">Recent Actions</h3>
+              <span className="text-xs text-white/60">
+                {actions.length} total
+              </span>
+            </div>
             <CardContent>
               {loading ? (
                 <div className="flex items-center justify-center py-8">
@@ -430,7 +557,7 @@ export default function ActionsPage() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ duration: 0.3, delay: index * 0.1 }}
-                          className="dark:border-dark-border rounded-lg border border-green-200 p-4 transition-shadow hover:shadow-md"
+                          className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition-all hover:bg-white/[0.06]"
                         >
                           <div className="mb-3 flex items-start justify-between">
                             <div className="flex items-center space-x-3">
@@ -444,7 +571,7 @@ export default function ActionsPage() {
                                 </div>
                               )}
                               <div>
-                                <h3 className="text-earth-900 dark:text-dark-text-primary font-medium">
+                                <h3 className="font-medium text-white">
                                   {action.description}
                                 </h3>
                                 <div className="mt-1 flex items-center space-x-2">
@@ -460,10 +587,10 @@ export default function ActionsPage() {
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                              <div className="text-lg font-bold text-green-400">
                                 +{action.points}
                               </div>
-                              <div className="text-earth-600 dark:text-dark-text-secondary flex items-center text-xs">
+                              <div className="flex items-center text-xs text-white/60">
                                 <Clock className="mr-1 h-3 w-3" />
                                 {formatTimeAgo(action.timestamp)}
                               </div>
@@ -471,28 +598,28 @@ export default function ActionsPage() {
                           </div>
 
                           {/* Impact Metrics */}
-                          <div className="dark:border-dark-border grid grid-cols-3 gap-4 border-t border-green-200 pt-3">
+                          <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-3">
                             <div className="text-center">
-                              <div className="text-earth-900 dark:text-dark-text-primary text-sm font-medium">
+                              <div className="text-sm font-medium text-white">
                                 {action.impact.carbonSaved} kg
                               </div>
-                              <div className="text-earth-600 dark:text-dark-text-secondary text-xs">
+                              <div className="text-xs text-white/60">
                                 CO₂ Saved
                               </div>
                             </div>
                             <div className="text-center">
-                              <div className="text-earth-900 dark:text-dark-text-primary text-sm font-medium">
+                              <div className="text-sm font-medium text-white">
                                 {action.impact.waterSaved} L
                               </div>
-                              <div className="text-earth-600 dark:text-dark-text-secondary text-xs">
+                              <div className="text-xs text-white/60">
                                 Water Saved
                               </div>
                             </div>
                             <div className="text-center">
-                              <div className="text-earth-900 dark:text-dark-text-primary text-sm font-medium">
+                              <div className="text-sm font-medium text-white">
                                 {action.impact.wasteReduced} kg
                               </div>
-                              <div className="text-earth-600 dark:text-dark-text-secondary text-xs">
+                              <div className="text-xs text-white/60">
                                 Waste Reduced
                               </div>
                             </div>
@@ -504,13 +631,13 @@ export default function ActionsPage() {
 
                   {actions.length === 0 && (
                     <div className="py-8 text-center">
-                      <AlertCircle className="text-earth-400 dark:text-dark-text-muted mx-auto mb-4 h-12 w-12" />
-                      <p className="text-earth-600 dark:text-dark-text-secondary mb-4">
+                      <AlertCircle className="mx-auto mb-4 h-12 w-12 text-white/40" />
+                      <p className="mb-4 text-white/60">
                         No actions logged yet. Start by logging your first
                         eco-friendly action!
                       </p>
-                      <div className="rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
-                        <p className="text-sm text-blue-800 dark:text-blue-300">
+                      <div className="rounded-lg border border-blue-500/20 bg-blue-500/10 p-4">
+                        <p className="text-sm text-blue-300">
                           <strong>Database Setup Required:</strong> If
                           you&apos;re seeing this message and can&apos;t log
                           actions, please check the{" "}
@@ -529,7 +656,7 @@ export default function ActionsPage() {
                 </div>
               )}
             </CardContent>
-          </Card>
+          </div>
         </motion.div>
       </div>
     </div>
