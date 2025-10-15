@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { formatPoints, calculateLevel, getLevelProgress } from "@/lib/utils";
+import { formatNumber, getLevel, getLevelProgress } from "@/lib/utils";
 import { Coins, Trophy, Zap } from "lucide-react";
 
 interface PointsDisplayProps {
@@ -27,11 +27,11 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
   size = "md",
   animate = true,
 }) => {
-  const currentLevel = level || calculateLevel(points);
-  const levelProgress = getLevelProgress(points);
-  const nextLevelPoints = Math.pow(currentLevel, 2) * 1000;
-  const currentLevelStart = Math.pow(currentLevel - 1, 2) * 1000;
-  const pointsToNextLevel = nextLevelPoints - points;
+  const levelData = getLevel(points);
+  const currentLevel = level || levelData.level;
+  const levelProgressData = getLevelProgress(points);
+  const progressPercentage = levelProgressData.progress;
+  const pointsToNextLevel = levelProgressData.pointsToNext;
 
   const sizes = {
     sm: {
@@ -55,30 +55,32 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
   };
 
   const content = (
-    <Card className={sizes[size].card} variant="elevated">
-      <div className="flex items-center justify-between mb-4">
+    <div
+      className={`${sizes[size].card} group rounded-2xl border border-white/10 bg-white/[0.02] shadow-lg shadow-black/20 backdrop-blur-2xl transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-green-500/10`}
+    >
+      <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <motion.div
-            className="p-2 bg-gradient-to-r from-green-400 to-green-500 rounded-full"
+            className="gradient-green rounded-full p-3 shadow-lg"
             animate={animate ? { rotate: [0, 10, -10, 0] } : {}}
             transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
           >
             <Coins className={`${sizes[size].icon} text-white`} />
           </motion.div>
           <div>
-            <h3 className={`${sizes[size].points} font-bold text-gradient`}>
-              {formatPoints(points)}
+            <h3 className={`${sizes[size].points} text-gradient font-bold`}>
+              {formatNumber(points)}
             </h3>
-            <p className={`${sizes[size].level} text-earth-600`}>
+            <p className={`${sizes[size].level} body-md`}>
               Level {currentLevel}
             </p>
           </div>
         </div>
-        
+
         {showBadges && badges.length > 0 && (
           <div className="flex items-center space-x-2">
-            <Trophy className={`${sizes[size].icon} text-yellow-500`} />
-            <span className="text-sm text-earth-600">{badges.length}</span>
+            <Trophy className={`${sizes[size].icon} text-amber-500`} />
+            <span className="body-sm font-semibold">{badges.length}</span>
           </div>
         )}
       </div>
@@ -86,34 +88,27 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
       {showProgress && (
         <div className="space-y-3">
           <ProgressBar
-            value={levelProgress}
+            value={progressPercentage}
             variant="gradient"
             showLabel={false}
             animate={animate}
           />
-          <div className="flex justify-between text-sm text-earth-600">
+          <div className="body-sm flex justify-between">
             <span>Level {currentLevel}</span>
-            <span>{formatPoints(pointsToNextLevel)} to next level</span>
+            <span>{formatNumber(pointsToNextLevel)} to next level</span>
           </div>
         </div>
       )}
 
       {showBadges && badges.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-green-200">
-          <div className="flex items-center space-x-2 mb-2">
+        <div className="border-earth-300 dark:border-dark-border mt-4 border-t pt-4">
+          <div className="mb-2 flex items-center space-x-2">
             <Zap className="h-4 w-4 text-green-500" />
-            <span className="text-sm font-medium text-earth-700">
-              Recent Badges
-            </span>
+            <span className="body-sm font-medium">Recent Badges</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {badges.slice(0, 3).map((badge, index) => (
-              <Badge
-                key={index}
-                variant="success"
-                size="sm"
-                animate={animate}
-              >
+              <Badge key={index} variant="success" size="sm" animate={animate}>
                 {badge}
               </Badge>
             ))}
@@ -125,7 +120,7 @@ export const PointsDisplay: React.FC<PointsDisplayProps> = ({
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 
   if (animate) {
