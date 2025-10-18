@@ -62,7 +62,7 @@ export default function ProfilePage() {
               Profile Settings
             </h1>
             <p className="text-earth-600 dark:text-dark-text-secondary mt-2">
-              Manage your account settings and preferences.
+              Manage your account settings and preferences accordingly.
             </p>
           </div>
           <div className="flex items-center space-x-2">
