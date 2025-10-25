@@ -3,12 +3,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuthContext } from "@/components/providers/AuthProvider";
-import { Card, CardHeader, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
-import { ProgressBar } from "@/components/ui/ProgressBar";
-import { User, Settings, Edit, Save, Camera, Eye, EyeOff } from "lucide-react";
+import { User, Edit, Save, Camera, Eye, EyeOff } from "lucide-react";
 
 export default function ProfilePage() {
   const { user } = useAuthContext();
@@ -62,7 +60,7 @@ export default function ProfilePage() {
               Profile Settings
             </h1>
             <p className="text-earth-600 dark:text-dark-text-secondary mt-2">
-              Manage your account settings and preferences.
+              Manage your account settings and preferences accordingly.
             </p>
           </div>
           <div className="flex items-center space-x-2">
@@ -90,253 +88,377 @@ export default function ProfilePage() {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Profile Overview */}
+      <div className="space-y-8">
+        {/* Profile Header */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="lg:col-span-1"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-8 shadow-2xl backdrop-blur-2xl"
         >
-          <Card>
-            <CardHeader title="Profile Overview" />
-            <CardContent className="space-y-6">
-              {/* Avatar */}
-              <div className="text-center">
-                <div className="relative inline-block">
-                  <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-green-500">
-                    <User className="h-12 w-12 text-white" />
-                  </div>
-                  {isEditing && (
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="dark:bg-dark-surface absolute -right-2 -bottom-2 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-lg"
-                    >
-                      <Camera className="h-4 w-4 text-green-600" />
-                    </motion.button>
-                  )}
-                </div>
-                <h3 className="text-earth-900 dark:text-dark-text-primary mt-4 text-xl font-semibold">
-                  {user?.name || "User Name"}
-                </h3>
-                <p className="text-earth-600 dark:text-dark-text-secondary">
-                  {user?.email || "user@example.com"}
-                </p>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 via-transparent to-blue-400/20" />
+          <div className="relative flex flex-col items-center text-center lg:flex-row lg:text-left">
+            <div className="relative">
+              <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-green-500 ring-4 ring-white/20">
+                <User className="h-16 w-16 text-white" />
               </div>
+              {isEditing && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="absolute -right-2 -bottom-2 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/20 shadow-xl backdrop-blur-xl"
+                >
+                  <Camera className="h-5 w-5 text-white" />
+                </motion.button>
+              )}
+            </div>
 
-              {/* Stats */}
+            <div className="mt-6 flex-1 lg:mt-0 lg:ml-8">
+              <h1 className="mb-2 text-3xl font-bold text-white">
+                {user?.name || "User Name"}
+              </h1>
+              <p className="mb-4 text-lg text-white/70">
+                {user?.email || "user@example.com"}
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 text-sm lg:justify-start">
+                <div className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-xl">
+                  <div className="h-2 w-2 rounded-full bg-green-400" />
+                  <span className="text-white/90">Active Member</span>
+                </div>
+                <div className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-xl">
+                  <span className="text-white/90">🌱 Eco Warrior</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-3 gap-6 text-center lg:mt-0">
+              <div>
+                <div className="text-2xl font-bold text-white">2,450</div>
+                <div className="text-sm text-white/70">Total Points</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">3</div>
+                <div className="text-sm text-white/70">Level</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">7</div>
+                <div className="text-sm text-white/70">Day Streak</div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          {/* Stats Overview */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="space-y-6"
+          >
+            {/* Level Progress */}
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-xl backdrop-blur-2xl">
+              <h3 className="mb-4 text-xl font-semibold text-white">
+                Level Progress
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-white/70">Current Level</span>
+                  <Badge
+                    variant="success"
+                    className="border-green-400/30 bg-green-500/20 text-green-300"
+                  >
+                    Level 3
+                  </Badge>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-white/70">Progress to Level 4</span>
+                    <span className="font-medium text-white">65%</span>
+                  </div>
+                  <div className="h-3 overflow-hidden rounded-full bg-white/10">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: "65%" }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                      className="h-full rounded-full bg-gradient-to-r from-green-400 to-green-500"
+                    />
+                  </div>
+                  <div className="text-center text-xs text-white/60">
+                    550 / 1500 XP to next level
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Achievements */}
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-xl backdrop-blur-2xl">
+              <h3 className="mb-4 text-xl font-semibold text-white">
+                Recent Achievements
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-500/20">
+                    <span className="text-lg">🏆</span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-white">Streak Master</div>
+                    <div className="text-sm text-white/60">
+                      7-day streak achieved
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/20">
+                    <span className="text-lg">🌱</span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-white">Tree Planter</div>
+                    <div className="text-sm text-white/60">Planted 5 trees</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/20">
+                    <span className="text-lg">♻️</span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-white">Recycling Hero</div>
+                    <div className="text-sm text-white/60">
+                      100 items recycled
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-xl backdrop-blur-2xl">
+              <h3 className="mb-4 text-xl font-semibold text-white">
+                Quick Stats
+              </h3>
               <div className="space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-earth-600 dark:text-dark-text-secondary">
-                    Level
-                  </span>
-                  <Badge variant="success">Level 3</Badge>
+                  <span className="text-white/70">Total Actions</span>
+                  <span className="font-medium text-white">127</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-earth-600 dark:text-dark-text-secondary">
-                    Points
-                  </span>
-                  <span className="text-earth-900 dark:text-dark-text-primary font-medium">
-                    2,450
-                  </span>
+                  <span className="text-white/70">CO₂ Saved</span>
+                  <span className="font-medium text-white">45.2 kg</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-earth-600 dark:text-dark-text-secondary">
-                    Streak
-                  </span>
-                  <span className="text-earth-900 dark:text-dark-text-primary font-medium">
-                    7 days
-                  </span>
+                  <span className="text-white/70">Water Saved</span>
+                  <span className="font-medium text-white">2,340 L</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-earth-600 dark:text-dark-text-secondary">
-                    Member Since
-                  </span>
-                  <span className="text-earth-900 dark:text-dark-text-primary font-medium">
-                    Jan 2024
-                  </span>
+                  <span className="text-white/70">Member Since</span>
+                  <span className="font-medium text-white">Jan 2024</span>
                 </div>
               </div>
+            </div>
+          </motion.div>
 
-              {/* Progress to Next Level */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-earth-600 dark:text-dark-text-secondary">
-                    Progress to Level 4
-                  </span>
-                  <span className="text-earth-900 dark:text-dark-text-primary font-medium">
-                    65%
-                  </span>
+          {/* Profile Settings */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="space-y-6 lg:col-span-2"
+          >
+            {/* Personal Information */}
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-xl backdrop-blur-2xl">
+              <h3 className="mb-6 text-xl font-semibold text-white">
+                Personal Information
+              </h3>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-white/70">
+                      Full Name
+                    </label>
+                    <Input
+                      value={formData.name}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="border-white/20 bg-white/5 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-green-400/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-white/70">
+                      Email
+                    </label>
+                    <Input
+                      value={formData.email}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="border-white/20 bg-white/5 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-green-400/20"
+                    />
+                  </div>
                 </div>
-                <ProgressBar value={65} variant="gradient" showLabel={false} />
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-white/70">
+                    Bio
+                  </label>
+                  <textarea
+                    value={formData.bio}
+                    onChange={(e) => handleInputChange("bio", e.target.value)}
+                    disabled={!isEditing}
+                    placeholder="Tell us about yourself..."
+                    className="w-full resize-none rounded-xl border border-white/20 bg-white/5 px-4 py-3 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-2 focus:ring-green-400/20 focus:outline-none"
+                    rows={4}
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-white/70">
+                      Location
+                    </label>
+                    <Input
+                      value={formData.location}
+                      onChange={(e) =>
+                        handleInputChange("location", e.target.value)
+                      }
+                      disabled={!isEditing}
+                      placeholder="City, Country"
+                      className="border-white/20 bg-white/5 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-green-400/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-white/70">
+                      Website
+                    </label>
+                    <Input
+                      value={formData.website}
+                      onChange={(e) =>
+                        handleInputChange("website", e.target.value)
+                      }
+                      disabled={!isEditing}
+                      placeholder="https://yourwebsite.com"
+                      className="border-white/20 bg-white/5 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-green-400/20"
+                    />
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+            </div>
 
-        {/* Profile Settings */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-6 lg:col-span-2"
-        >
-          {/* Personal Information */}
-          <Card>
-            <CardHeader title="Personal Information" />
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {/* Security Settings */}
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-xl backdrop-blur-2xl">
+              <h3 className="mb-6 text-xl font-semibold text-white">
+                Security Settings
+              </h3>
+              <div className="space-y-6">
                 <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                    Full Name
+                  <label className="mb-2 block text-sm font-medium text-white/70">
+                    Current Password
                   </label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    disabled={!isEditing}
-                    className="mt-1"
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      value={formData.currentPassword}
+                      onChange={(e) =>
+                        handleInputChange("currentPassword", e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="border-white/20 bg-white/5 pr-12 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-green-400/20"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-white/50 transition-colors hover:text-white/70"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                    Email
-                  </label>
-                  <Input
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    disabled={!isEditing}
-                    className="mt-1"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                  Bio
-                </label>
-                <textarea
-                  value={formData.bio}
-                  onChange={(e) => handleInputChange("bio", e.target.value)}
-                  disabled={!isEditing}
-                  placeholder="Tell us about yourself..."
-                  className="text-earth-900 placeholder:text-earth-500 dark:border-dark-border dark:bg-dark-surface dark:text-dark-text-primary dark:placeholder:text-dark-text-muted mt-1 w-full rounded-lg border border-green-200 px-3 py-2 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:outline-none dark:focus:border-green-400"
-                  rows={3}
-                />
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                    Location
-                  </label>
-                  <Input
-                    value={formData.location}
-                    onChange={(e) =>
-                      handleInputChange("location", e.target.value)
-                    }
-                    disabled={!isEditing}
-                    placeholder="City, Country"
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                    Website
-                  </label>
-                  <Input
-                    value={formData.website}
-                    onChange={(e) =>
-                      handleInputChange("website", e.target.value)
-                    }
-                    disabled={!isEditing}
-                    placeholder="https://yourwebsite.com"
-                    className="mt-1"
-                  />
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-white/70">
+                      New Password
+                    </label>
+                    <Input
+                      type="password"
+                      value={formData.newPassword}
+                      onChange={(e) =>
+                        handleInputChange("newPassword", e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="border-white/20 bg-white/5 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-green-400/20"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-white/70">
+                      Confirm Password
+                    </label>
+                    <Input
+                      type="password"
+                      value={formData.confirmPassword}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
+                      disabled={!isEditing}
+                      className="border-white/20 bg-white/5 text-white placeholder:text-white/50 focus:border-green-400/50 focus:ring-green-400/20"
+                    />
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Security Settings */}
-          <Card>
-            <CardHeader title="Security Settings" />
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                  Current Password
-                </label>
-                <div className="relative mt-1">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    value={formData.currentPassword}
-                    onChange={(e) =>
-                      handleInputChange("currentPassword", e.target.value)
-                    }
-                    disabled={!isEditing}
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-earth-400 hover:text-earth-600 absolute top-1/2 right-3 -translate-y-1/2"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
+            {/* Notification Preferences */}
+            <div className="rounded-2xl border border-white/10 bg-white/10 p-6 shadow-xl backdrop-blur-2xl">
+              <h3 className="mb-6 text-xl font-semibold text-white">
+                Notification Preferences
+              </h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <div className="font-medium text-white">
+                      Email Notifications
+                    </div>
+                    <div className="text-sm text-white/60">
+                      Receive updates about your progress
+                    </div>
+                  </div>
+                  <div className="relative h-6 w-12 cursor-pointer rounded-full border border-green-400/50 bg-green-500/30">
+                    <div className="absolute top-0.5 right-0.5 h-5 w-5 rounded-full bg-green-400 shadow-sm"></div>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                    New Password
-                  </label>
-                  <Input
-                    type="password"
-                    value={formData.newPassword}
-                    onChange={(e) =>
-                      handleInputChange("newPassword", e.target.value)
-                    }
-                    disabled={!isEditing}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <label className="text-earth-700 dark:text-dark-text-secondary text-sm font-medium">
-                    Confirm Password
-                  </label>
-                  <Input
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={(e) =>
-                      handleInputChange("confirmPassword", e.target.value)
-                    }
-                    disabled={!isEditing}
-                    className="mt-1"
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Preferences */}
-          <Card>
-            <CardHeader title="Preferences" />
-            <CardContent>
-              <div className="py-8 text-center">
-                <Settings className="text-earth-400 mx-auto mb-4 h-12 w-12" />
-                <h3 className="text-earth-900 dark:text-dark-text-primary mb-2 text-lg font-medium">
-                  Preferences Coming Soon!
-                </h3>
-                <p className="text-earth-600 dark:text-dark-text-secondary">
-                  We&apos;re working on notification settings, theme
-                  preferences, and more customization options.
-                </p>
+                <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <div className="font-medium text-white">
+                      Achievement Alerts
+                    </div>
+                    <div className="text-sm text-white/60">
+                      Get notified when you earn badges
+                    </div>
+                  </div>
+                  <div className="relative h-6 w-12 cursor-pointer rounded-full border border-green-400/50 bg-green-500/30">
+                    <div className="absolute top-0.5 right-0.5 h-5 w-5 rounded-full bg-green-400 shadow-sm"></div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div>
+                    <div className="font-medium text-white">Weekly Summary</div>
+                    <div className="text-sm text-white/60">
+                      Weekly report of your eco actions
+                    </div>
+                  </div>
+                  <div className="relative h-6 w-12 cursor-pointer rounded-full border border-white/30 bg-white/20">
+                    <div className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white/60 shadow-sm"></div>
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );

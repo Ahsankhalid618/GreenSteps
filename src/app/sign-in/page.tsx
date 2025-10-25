@@ -42,9 +42,9 @@ export default function SignInPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-1/4"
       >
-        <Card>
+        <Card className="shadow-lg w-full max-w-full">
           <CardHeader>
             <div className="text-center">
               <div className="mb-4 inline-flex rounded-full bg-gradient-to-r from-green-400 to-green-500 p-3">
@@ -105,7 +105,7 @@ export default function SignInPage() {
 
             <div className="mt-6 text-center">
               <p className="text-earth-600">
-                Don't have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
                   href="/sign-up"
                   className="font-medium text-green-600 hover:text-green-700"

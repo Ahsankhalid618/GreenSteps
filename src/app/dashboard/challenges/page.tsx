@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardHeader, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -10,18 +9,12 @@ import { Input } from "@/components/ui/Input";
 import {
   Target,
   Users,
-  Trophy,
   Calendar,
-  Clock,
   Search,
-  Filter,
-  Plus,
   CheckCircle,
   Star,
   Leaf,
   Zap,
-  TrendingUp,
-  Award,
   Flame,
   Droplet,
   Recycle,
@@ -53,7 +46,6 @@ export default function ChallengesPage() {
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [loading, setLoading] = useState(true);
 
   // Mock data
   const mockChallenges: Challenge[] = useMemo(
@@ -168,10 +160,8 @@ export default function ChallengesPage() {
 
   useEffect(() => {
     const loadChallenges = async () => {
-      setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 500));
       setChallenges(mockChallenges);
-      setLoading(false);
     };
 
     loadChallenges();

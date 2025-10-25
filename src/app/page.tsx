@@ -4,9 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuthContext } from "@/components/providers/AuthProvider";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+
 import {
   Leaf,
   TrendingUp,

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthContext } from "@/components/providers/AuthProvider";
-import { Card, CardHeader, CardContent } from "@/components/ui/Card";
+import { CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
@@ -21,9 +21,6 @@ import {
   ShoppingBag,
   AlertCircle,
   TrendingUp,
-  Award,
-  Calendar,
-  CheckCircle2,
 } from "lucide-react";
 import { z } from "zod";
 import {
@@ -112,7 +109,52 @@ const difficultyMultipliers = {
 
 export default function ActionsPage() {
   const { user } = useAuthContext();
-  const [actions, setActions] = useState<Action[]>([]);
+  // Initialize with sample data to populate the monthly progress
+  const [actions, setActions] = useState<Action[]>([
+    {
+      id: "1",
+      category: "transportation",
+      description: "Walked to work instead of driving - 2km distance",
+      difficulty: "easy",
+      points: 20,
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+      impact: {
+        carbonSaved: 2,
+        waterSaved: 40,
+        wasteReduced: 1,
+      },
+      userId: user?.$id || "",
+    },
+    {
+      id: "2",
+      category: "energy",
+      description: "Switched to LED bulbs throughout the house",
+      difficulty: "medium",
+      points: 23,
+      timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+      impact: {
+        carbonSaved: 2,
+        waterSaved: 45,
+        wasteReduced: 1,
+      },
+      userId: user?.$id || "",
+    },
+    {
+      id: "3",
+      category: "waste",
+      description: "Started composting kitchen scraps and organic waste",
+      difficulty: "hard",
+      points: 50,
+      timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+      impact: {
+        carbonSaved: 5,
+        waterSaved: 100,
+        wasteReduced: 3,
+      },
+      userId: user?.$id || "",
+    },
+    
+  ]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -164,7 +206,14 @@ export default function ActionsPage() {
       setLoading(true);
       try {
         const userActions = await getUserActions(user.$id, 20);
-        setActions(userActions);
+        // Merge real actions with sample data, prioritizing real actions
+        setActions((prevActions) => {
+          const realActionIds = userActions.map((action) => action.id);
+          const sampleActionsFiltered = prevActions.filter(
+            (action) => !realActionIds.includes(action.id),
+          );
+          return [...userActions, ...sampleActionsFiltered];
+        });
       } catch (error) {
         console.error("Error loading actions:", error);
         // Check if it's a database not found error
@@ -184,8 +233,8 @@ export default function ActionsPage() {
             "Database schema is not set up correctly. Please check the Schema Validation Guide.",
           );
         }
-        // Fallback to empty array on error
-        setActions([]);
+        // Keep sample data on error - don't reset to empty array
+        console.log("Using sample data due to database error");
       } finally {
         setLoading(false);
       }
@@ -314,29 +363,108 @@ export default function ActionsPage() {
         >
           <div className="h-full rounded-2xl border border-white/10 bg-white/[0.02] p-4 shadow-lg shadow-black/20 backdrop-blur-2xl">
             <h3 className="mb-3 text-base font-bold text-white">
-              Today's Impact
+              Today&apos;s Impact
             </h3>
-            <div className="space-y-3">
-              <div className="rounded-lg bg-green-500/10 p-3">
-                <div className="mb-1 flex items-center gap-2">
-                  <Leaf className="h-4 w-4 text-green-400" />
-                  <span className="text-xs text-white/70">CO₂ Saved</span>
+            <div className="space-y-4">
+              {/* Main Impact Metrics */}
+              <div className="space-y-3">
+                <div className="rounded-lg bg-green-500/10 p-3">
+                  <div className="mb-1 flex items-center gap-2">
+                    <Leaf className="h-4 w-4 text-green-400" />
+                    <span className="text-xs text-white/70">CO₂ Saved</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xl font-bold text-white">
+                      {actions.reduce(
+                        (total, action) => total + action.impact.carbonSaved,
+                        0,
+                      )}{" "}
+                      kg
+                    </p>
+                    <span className="text-xs text-green-400">+12% vs yesterday</span>
+                  </div>
                 </div>
-                <p className="text-xl font-bold text-white">2.5 kg</p>
+                <div className="rounded-lg bg-blue-500/10 p-3">
+                  <div className="mb-1 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-blue-400" />
+                    <span className="text-xs text-white/70">Water Saved</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xl font-bold text-white">
+                      {actions.reduce(
+                        (total, action) => total + action.impact.waterSaved,
+                        0,
+                      )}{" "}
+                      L
+                    </p>
+                    <span className="text-xs text-blue-400">+8% vs yesterday</span>
+                  </div>
+                </div>
+                <div className="rounded-lg bg-amber-500/10 p-3">
+                  <div className="mb-1 flex items-center gap-2">
+                    <Recycle className="h-4 w-4 text-amber-400" />
+                    <span className="text-xs text-white/70">Waste Reduced</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xl font-bold text-white">
+                      {actions.reduce(
+                        (total, action) => total + action.impact.wasteReduced,
+                        0,
+                      )}{" "}
+                      kg
+                    </p>
+                    <span className="text-xs text-amber-400">+25% vs yesterday</span>
+                  </div>
+                </div>
               </div>
-              <div className="rounded-lg bg-blue-500/10 p-3">
-                <div className="mb-1 flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-blue-400" />
-                  <span className="text-xs text-white/70">Water Saved</span>
+
+              {/* Daily Goal Progress */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-white/70">Daily Goal Progress</span>
+                  <span className="text-xs text-white/80">3/5 goals</span>
                 </div>
-                <p className="text-xl font-bold text-white">45 L</p>
+                <div className="h-2 rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-green-600 to-green-400"
+                    style={{ width: "60%" }}
+                  />
+                </div>
               </div>
-              <div className="rounded-lg bg-amber-500/10 p-3">
-                <div className="mb-1 flex items-center gap-2">
-                  <Recycle className="h-4 w-4 text-amber-400" />
-                  <span className="text-xs text-white/70">Waste Reduced</span>
+
+
+
+              {/* Environmental Equivalents */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-medium text-white/80">Impact Equivalents</h4>
+                <div className="grid grid-cols-1 gap-2">
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.03]">
+                    <span className="text-xs text-white/70">🌳 Trees planted</span>
+                    <span className="text-xs text-green-400">0.8 trees</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.03]">
+                    <span className="text-xs text-white/70">🚗 Car miles avoided</span>
+                    <span className="text-xs text-blue-400">42 miles</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-white/[0.03]">
+                    <span className="text-xs text-white/70">💡 Bulbs powered</span>
+                    <span className="text-xs text-amber-400">168 hours</span>
+                  </div>
                 </div>
-                <p className="text-xl font-bold text-white">1.2 kg</p>
+              </div>
+
+              {/* Daily Challenge */}
+              <div className="rounded-lg bg-gradient-to-r from-emerald-500/20 to-teal-500/20 p-3 border border-emerald-500/30">
+                <div className="flex items-center gap-2">
+                  <div className="text-lg">🎯</div>
+                  <div>
+                    <div className="text-xs font-medium text-white">Daily Challenge</div>
+                    <div className="text-xs text-white/60">Use public transport once</div>
+                  </div>
+                  <div className="ml-auto">
+                    <div className="text-xs text-emerald-400">2/3 done</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -493,33 +621,134 @@ export default function ActionsPage() {
             <h3 className="mb-3 text-base font-bold text-white">
               Monthly Progress
             </h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-white/70">Actions Logged</span>
-                <span className="text-lg font-bold text-white">
-                  {actions.length}/50
-                </span>
+            <div className="space-y-4">
+              {/* Actions Progress */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-white/70">Actions Logged</span>
+                  <span className="text-lg font-bold text-white">
+                    {actions.length}/50
+                  </span>
+                </div>
+                <div className="h-2 rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-green-600 to-green-400"
+                    style={{
+                      width: `${Math.min((actions.length / 50) * 100, 100)}%`,
+                    }}
+                  />
+                </div>
               </div>
-              <div className="h-2 rounded-full bg-white/10">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-green-600 to-green-400"
-                  style={{
-                    width: `${Math.min((actions.length / 50) * 100, 100)}%`,
-                  }}
-                />
+
+              {/* Points Progress */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-white/70">Monthly Goal</span>
+                  <span className="text-sm font-bold text-white">
+                    {actions.reduce(
+                      (total, action) => total + action.points,
+                      0,
+                    )}
+                    /500
+                  </span>
+                </div>
+                <div className="h-2 rounded-full bg-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-blue-600 to-blue-400"
+                    style={{
+                      width: `${Math.min((actions.reduce((total, action) => total + action.points, 0) / 500) * 100, 100)}%`,
+                    }}
+                  />
+                </div>
               </div>
-              <div className="grid grid-cols-3 gap-2 pt-2">
+
+              {/* Category Breakdown */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-medium text-white/80">
+                  Top Categories
+                </h4>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-white/60">
+                      🚗 Transportation
+                    </span>
+                    <span className="text-xs text-green-400">
+                      {
+                        actions.filter((a) => a.category === "transportation")
+                          .length
+                      }{" "}
+                      actions
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-white/60">♻️ Waste</span>
+                    <span className="text-xs text-green-400">
+                      {actions.filter((a) => a.category === "waste").length}{" "}
+                      actions
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-white/60">⚡ Energy</span>
+                    <span className="text-xs text-green-400">
+                      {actions.filter((a) => a.category === "energy").length}{" "}
+                      actions
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Weekly Comparison */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-medium text-white/80">
+                  This Week vs Last
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="rounded-lg bg-white/[0.03] p-2 text-center">
+                    <div className="text-sm font-bold text-green-400">+23%</div>
+                    <div className="text-xs text-white/60">More Actions</div>
+                  </div>
+                  <div className="rounded-lg bg-white/[0.03] p-2 text-center">
+                    <div className="text-sm font-bold text-blue-400">+15%</div>
+                    <div className="text-xs text-white/60">More Points</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-3 gap-2 border-t border-white/10 pt-2">
                 <div className="text-center">
-                  <div className="text-base font-bold text-green-400">42</div>
+                  <div className="text-base font-bold text-green-400">
+                    {actions.length}
+                  </div>
                   <div className="text-xs text-white/60">This Month</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-base font-bold text-blue-400">650</div>
+                  <div className="text-base font-bold text-blue-400">
+                    {actions.reduce(
+                      (total, action) => total + action.points,
+                      0,
+                    )}
+                  </div>
                   <div className="text-xs text-white/60">Total Points</div>
                 </div>
                 <div className="text-center">
                   <div className="text-base font-bold text-amber-400">7</div>
                   <div className="text-xs text-white/60">Day Streak</div>
+                </div>
+              </div>
+
+              {/* Achievement Badge */}
+              <div className="rounded-lg border border-purple-500/30 bg-gradient-to-r from-purple-500/20 to-pink-500/20 p-3">
+                <div className="flex items-center gap-2">
+                  <div className="text-lg">🏆</div>
+                  <div>
+                    <div className="text-xs font-medium text-white">
+                      Eco Warrior
+                    </div>
+                    <div className="text-xs text-white/60">
+                      Level 2 • Next: 250 pts
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

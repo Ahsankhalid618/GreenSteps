@@ -79,13 +79,11 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         <div className="border-earth-300 dark:border-dark-border dark:bg-dark-surface/80 flex grow flex-col gap-y-5 overflow-y-auto border-r bg-white/80 px-6 pb-4 backdrop-blur-xl">
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center">
-            <Link href="/dashboard" className="flex items-center space-x-2">
-              <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-xl shadow-lg">
+            <Link href="/dashboard" className="flex items-center space-x-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-green-400 to-green-500 shadow-lg">
                 <Leaf className="h-6 w-6 text-white" />
               </div>
-              <span className="text-gradient text-xl font-bold">
-                GreenSteps
-              </span>
+              <span className="text-xl font-bold text-white">GreenSteps</span>
             </Link>
           </div>
 
@@ -106,8 +104,8 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                             href={item.href}
                             className={
                               isActive
-                                ? "sidebar-nav-item-active"
-                                : "sidebar-nav-item"
+                                ? "flex items-center gap-3 rounded-xl border border-white/30 bg-white/20 px-3 py-2.5 text-sm font-semibold text-white backdrop-blur-xl"
+                                : "flex items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-sm font-medium text-white/70 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
                             }
                           >
                             <item.icon className="h-5 w-5 shrink-0" />
@@ -122,16 +120,16 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
               {/* User section */}
               <li className="mt-auto">
-                <div className="border-earth-300 dark:border-dark-border border-t pt-4">
-                  <div className="to-sage-50 dark:from-forest-900 dark:to-dark-surface mb-4 flex items-center space-x-3 rounded-xl bg-gradient-to-r from-green-50 p-3">
-                    <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-full shadow-md">
+                <div className="border-t border-white/10 pt-4 flex flex-col items-center justify-center gap-2">
+                  <div className="mb-4 flex items-center space-x-3 rounded-xl border border-white/20 bg-white/10 p-3 backdrop-blur-xl w-full max-w-fit">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md">
                       <User className="h-5 w-5 text-white" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-earth-900 dark:text-dark-text-primary truncate text-sm font-semibold">
+                      <p className="truncate text-sm font-semibold text-white">
                         {user?.name}
                       </p>
-                      <p className="text-earth-600 dark:text-dark-text-muted truncate text-xs">
+                      <p className="truncate text-xs text-white/60">
                         {user?.email}
                       </p>
                     </div>
@@ -141,7 +139,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                     variant="destructive"
                     fullWidth
                     showConfirmation={false}
-                    className="btn-danger w-full justify-center"
+                    className=" w-full justify-center bg-red-500/70 text-white backdrop-blur-xl max-w-fit"
                     icon={<LogOut className="h-4 w-4" />}
                   >
                     Sign Out
@@ -163,14 +161,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
             transition={{ duration: 0.3 }}
             className="fixed inset-y-0 z-50 flex w-64 flex-col lg:hidden"
           >
-            <div className="border-earth-300 dark:border-dark-border dark:bg-dark-surface flex grow flex-col gap-y-5 overflow-y-auto border-r bg-white px-6 pb-4">
+            <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-white/10 bg-white/10 px-6 pb-4 backdrop-blur-2xl">
               {/* Header with close button */}
               <div className="flex h-16 shrink-0 items-center justify-between">
-                <Link href="/dashboard" className="flex items-center space-x-2">
-                  <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-xl shadow-lg">
+                <Link href="/dashboard" className="flex items-center space-x-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-green-400 to-green-500 shadow-lg">
                     <Leaf className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-gradient text-xl font-bold">
+                  <span className="text-xl font-bold text-white">
                     GreenSteps
                   </span>
                 </Link>
@@ -178,7 +176,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={onClose}
-                  className="hover:bg-earth-100 dark:hover:bg-dark-surface-elevated text-earth-700 dark:text-dark-text-secondary rounded-lg p-2 transition-colors"
+                  className="rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10"
                 >
                   <X className="h-5 w-5" />
                 </motion.button>
@@ -202,8 +200,8 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                                 onClick={onClose}
                                 className={
                                   isActive
-                                    ? "sidebar-nav-item-active"
-                                    : "sidebar-nav-item"
+                                    ? "flex items-center gap-3 rounded-xl border border-white/30 bg-white/20 px-3 py-2.5 text-sm font-semibold text-white backdrop-blur-xl"
+                                    : "flex items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 text-sm font-medium text-white/70 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
                                 }
                               >
                                 <item.icon className="h-5 w-5 shrink-0" />
@@ -218,16 +216,16 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
                   {/* User section */}
                   <li className="mt-auto">
-                    <div className="border-earth-300 dark:border-dark-border border-t pt-4">
-                      <div className="to-sage-50 dark:from-forest-900 dark:to-dark-surface mb-4 flex items-center space-x-3 rounded-xl bg-gradient-to-r from-green-50 p-3">
-                        <div className="gradient-green flex h-10 w-10 items-center justify-center rounded-full shadow-md">
+                    <div className="flex flex-col items-center justify-center gap-2 border-t border-white/10 pt-4">
+                      <div className="mb-4 flex w-full max-w-fit items-center space-x-3 rounded-xl border border-white/20 bg-white/10 p-3 backdrop-blur-xl">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-green-400 to-green-500 shadow-md">
                           <User className="h-5 w-5 text-white" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-earth-900 dark:text-dark-text-primary truncate text-sm font-semibold">
+                          <p className="truncate text-sm font-semibold text-white">
                             {user?.name}
                           </p>
-                          <p className="text-earth-600 dark:text-dark-text-muted truncate text-xs">
+                          <p className="truncate text-xs text-white/60">
                             {user?.email}
                           </p>
                         </div>
@@ -237,7 +235,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                         variant="destructive"
                         fullWidth
                         showConfirmation={false}
-                        className="btn-danger w-full justify-center"
+                        className="w-full max-w-fit justify-center rounded-xl border border-red-400/30 bg-red-500/70 text-white backdrop-blur-xl"
                         icon={<LogOut className="h-4 w-4" />}
                       >
                         Logout
