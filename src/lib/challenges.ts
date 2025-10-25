@@ -1,6 +1,29 @@
 import { databases, DB_CONFIG } from "@/tools/appwrite";
 import { ID, Query } from "appwrite";
 
+// Appwrite document interface for challenges
+interface AppwriteChallengeDocument {
+  $id: string;
+  $createdAt: string;
+  $updatedAt: string;
+  title: string;
+  description: string;
+  type: "community" | "personal";
+  category: string;
+  difficulty: "easy" | "medium" | "hard";
+  points: number;
+  requirements: string;
+  startDate: string;
+  endDate: string;
+  maxParticipants?: number;
+  currentParticipants: number;
+  createdBy: string;
+  status: "active" | "completed" | "upcoming" | "expired";
+  icon: string;
+  color: string;
+  bgColor: string;
+}
+
 export interface Challenge {
   id: string;
   title: string;
@@ -9,7 +32,7 @@ export interface Challenge {
   category: string;
   difficulty: "easy" | "medium" | "hard";
   points: number;
-  requirements: string[];
+  requirements: string;
   startDate: string;
   endDate: string;
   maxParticipants?: number;
@@ -42,7 +65,7 @@ export interface CreateChallengeData {
   category: string;
   difficulty: "easy" | "medium" | "hard";
   points: number;
-  requirements: string[];
+  requirements: string;
   startDate: string;
   endDate: string;
   maxParticipants?: number;
@@ -129,7 +152,33 @@ export async function getChallenges(filters?: {
       queries,
     );
 
-    return response.documents as unknown as Challenge[];
+    // Map Appwrite documents to Challenge interface
+    const challenges = response.documents.map((doc) => {
+      const challengeDoc = doc as unknown as AppwriteChallengeDocument;
+      return {
+        id: challengeDoc.$id,
+        title: challengeDoc.title,
+        description: challengeDoc.description,
+        type: challengeDoc.type,
+        category: challengeDoc.category,
+        difficulty: challengeDoc.difficulty,
+        points: challengeDoc.points,
+        requirements: challengeDoc.requirements,
+        startDate: challengeDoc.startDate,
+        endDate: challengeDoc.endDate,
+        maxParticipants: challengeDoc.maxParticipants,
+        currentParticipants: challengeDoc.currentParticipants,
+        createdBy: challengeDoc.createdBy,
+        status: challengeDoc.status,
+        icon: challengeDoc.icon,
+        color: challengeDoc.color,
+        bgColor: challengeDoc.bgColor,
+        createdAt: challengeDoc.$createdAt,
+        updatedAt: challengeDoc.$updatedAt,
+      };
+    });
+
+    return challenges as Challenge[];
   } catch (error) {
     console.error("Error fetching challenges:", error);
     throw new Error("Failed to fetch challenges");
@@ -139,13 +188,34 @@ export async function getChallenges(filters?: {
 // Get a specific challenge by ID
 export async function getChallenge(challengeId: string): Promise<Challenge> {
   try {
-    const challenge = await databases.getDocument(
+    const doc = await databases.getDocument(
       DB_CONFIG.databaseId,
       "challenges",
       challengeId,
     );
 
-    return challenge as unknown as Challenge;
+    const challengeDoc = doc as unknown as AppwriteChallengeDocument;
+    return {
+      id: challengeDoc.$id,
+      title: challengeDoc.title,
+      description: challengeDoc.description,
+      type: challengeDoc.type,
+      category: challengeDoc.category,
+      difficulty: challengeDoc.difficulty,
+      points: challengeDoc.points,
+      requirements: challengeDoc.requirements,
+      startDate: challengeDoc.startDate,
+      endDate: challengeDoc.endDate,
+      maxParticipants: challengeDoc.maxParticipants,
+      currentParticipants: challengeDoc.currentParticipants,
+      createdBy: challengeDoc.createdBy,
+      status: challengeDoc.status,
+      icon: challengeDoc.icon,
+      color: challengeDoc.color,
+      bgColor: challengeDoc.bgColor,
+      createdAt: challengeDoc.$createdAt,
+      updatedAt: challengeDoc.$updatedAt,
+    };
   } catch (error) {
     console.error("Error fetching challenge:", error);
     throw new Error("Failed to fetch challenge");

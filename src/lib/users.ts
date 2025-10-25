@@ -280,3 +280,50 @@ export async function getUserLeaderboardPosition(userId: string): Promise<{
     throw new Error("Failed to get leaderboard position. Please try again.");
   }
 }
+
+// Get leaderboard data with users ordered by total points
+export async function getLeaderboardData(
+  limit: number = 100,
+): Promise<UserProfile[]> {
+  try {
+    const response = await databases.listDocuments(
+      DB_CONFIG.databaseId,
+      DB_CONFIG.collections.users,
+      [Query.orderDesc("totalPoints"), Query.limit(limit)],
+    );
+
+    return response.documents.map((doc) => ({
+      id: doc.$id,
+      userId: doc.userId,
+      name: doc.name,
+      email: doc.email,
+      totalPoints: doc.totalPoints || 0,
+      currentStreak: doc.currentStreak || 0,
+      level: doc.level || 1,
+      badges: doc.badges || [],
+      totalActions: doc.totalActions || 0,
+      carbonSaved: doc.carbonSaved || 0,
+      waterSaved: doc.waterSaved || 0,
+      wasteReduced: doc.wasteReduced || 0,
+      preferences: doc.preferences || {
+        notifications: true,
+        weeklyGoal: 7,
+        theme: "auto",
+      },
+      createdAt: doc.$createdAt,
+      updatedAt: doc.$updatedAt,
+    }));
+  } catch (error) {
+    console.error("Error getting leaderboard data:", error);
+    throw new Error("Failed to get leaderboard data. Please try again.");
+  }
+}
+
+// Get weekly leaderboard (users ordered by recent activity - this would need more complex logic)
+export async function getWeeklyLeaderboard(
+  limit: number = 100,
+): Promise<UserProfile[]> {
+  // For now, return same as general leaderboard
+  // In a real implementation, this would track weekly points separately
+  return getLeaderboardData(limit);
+}

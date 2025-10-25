@@ -23,7 +23,7 @@ type AuthStore = AuthState & AuthActions;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // Initial state
       user: null,
       loading: true, // Start with loading true to prevent immediate auth check
@@ -103,7 +103,7 @@ export const useAuthStore = create<AuthStore>()(
             isAuthenticated: !!user,
             loading: false,
           });
-        } catch (error) {
+        } catch {
           // This is expected when no user is logged in
           set({
             user: null,
