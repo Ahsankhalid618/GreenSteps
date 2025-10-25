@@ -24,7 +24,7 @@ export const DashboardNavbar: React.FC<DashboardNavbarProps> = ({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="border-earth-300 dark:border-dark-border dark:bg-dark-surface/80 sticky top-0 z-30 border-b bg-white/80 shadow-sm backdrop-blur-xl"
+      className="border-earth-300 dark:border-dark-border dark:bg-dark-surface/80 sticky top-0 z-30 border-b bg-white/10 shadow-sm backdrop-blur-xl"
     >
       <div className="px-4 py-3 lg:px-6">
         <div className="flex items-center justify-between">

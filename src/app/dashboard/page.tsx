@@ -3,17 +3,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { PointsDisplay } from "@/components/gamification/PointsDisplay";
-import { LogoutButton } from "@/components/ui/LogoutButton";
 import {
   Leaf,
-  TrendingUp,
-  Target,
-  Users,
   Calendar,
   Plus,
   Award,
   Zap,
-  LogOut,
   TreePine,
   Droplet,
   Recycle,
@@ -169,7 +164,7 @@ export default function DashboardPage() {
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="flex items-center gap-2 text-lg font-bold text-white/80">
                   <Zap className="h-5 w-5 text-green-500" />
-                  Today's Impact
+                  Today&apos;s Impact
                 </h3>
                 <span className="text-xs text-green-400">Live</span>
               </div>
