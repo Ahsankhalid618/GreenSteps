@@ -631,9 +631,9 @@
 /* ============================================ */
 
 @utility glass-effect {
-  @apply border border-white/30 bg-white/10;
+  @apply border border-white/30 bg-white/5;
   @apply backdrop-blur-xl backdrop-saturate-150;
-  @apply dark:bg-dark-surface/20 dark:border-green-900/30;
+  
 }
 
 @utility glass-morphism {
