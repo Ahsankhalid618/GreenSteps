@@ -4,6 +4,7 @@ import React, { createContext, useContext, ReactNode, useEffect } from "react";
 import { useAuthStore } from "@/lib/auth-store";
 import { User, LoginCredentials, RegisterCredentials } from "@/types/auth";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { createOrUpdateUserProfile, getUserProfile } from "@/lib/users";
 
 interface AuthContextType {
   user: User | null;
@@ -36,11 +37,46 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth,
   } = useAuthStore();
 
-  // Check authentication on mount
+  // Check authentication and ensure user profile exists
   useEffect(() => {
-    // Always check auth on mount to determine if user is logged in
-    checkAuth();
+    const initializeUser = async () => {
+      // First check authentication
+      await checkAuth();
+    };
+
+    initializeUser();
   }, [checkAuth]);
+
+  // Ensure user profile exists when user is authenticated
+  useEffect(() => {
+    const ensureUserProfile = async () => {
+      if (user && isAuthenticated) {
+        try {
+          // Check if user profile exists
+          const existingProfile = await getUserProfile(user.$id);
+
+          if (!existingProfile) {
+            // Create profile if it doesn't exist
+            await createOrUpdateUserProfile({
+              userId: user.$id,
+              name: user.name,
+              email: user.email,
+              preferences: {
+                notifications: true,
+                weeklyGoal: 5,
+                theme: "auto",
+              },
+            });
+          }
+        } catch (error) {
+          console.error("Error ensuring user profile:", error);
+          // Don't throw here to avoid breaking the app
+        }
+      }
+    };
+
+    ensureUserProfile();
+  }, [user, isAuthenticated]);
 
   const contextValue: AuthContextType = {
     user,
