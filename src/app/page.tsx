@@ -9,6 +9,7 @@ import {
   FeaturesSection,
   HowItWorksSection,
   BenefitsSection,
+  TestimonialsSection,
   CTASection,
   Footer,
   LoggedInRedirect,
@@ -27,8 +28,9 @@ export default function HomePage() {
       <HeroSection />
       <Stats />
       <FeaturesSection />
-      <HowItWorksSection />
       <BenefitsSection />
+      <HowItWorksSection />
+      <TestimonialsSection />
       <CTASection />
       <Footer />
     </div>

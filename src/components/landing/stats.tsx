@@ -81,16 +81,16 @@ export default function Stats() {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="glass-effect bg-white/80 text-green-500 rounded-2xl p-8 text-center hover:shadow-xl transition-all duration-300 animate-scale-in group"
+              className="backdrop-blur-xl border-2 border-white/20 bg-white/10 text-primary rounded-2xl p-8 text-center hover:shadow-xl transition-all duration-300 animate-scale-in group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-primary/10 mb-4 group-hover:bg-primary/20 transition-colors">
-                <stat.icon className="h-8 w-8 text-primary" />
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-green-500 mb-4 group-hover:bg-primary/20 transition-colors">
+                <stat.icon className="h-8 w-8 text-white" />
               </div>
-              <div className="text-4xl sm:text-5xl font-bold text-foreground mb-2">
+              <div className="text-4xl xl:text-3xl sm:text-5xl font-bold text-foreground mb-2">
                 <CountUp end={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
+              <p className="text-sm text-muted-foreground text-gray-200">{stat.label}</p>
             </div>
           ))}
         </div>
