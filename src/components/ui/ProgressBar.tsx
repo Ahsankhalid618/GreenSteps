@@ -27,12 +27,12 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
       pulse = false,
       ...props
     },
-    ref
+    ref,
   ) => {
     const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
-    
+
     const baseClasses = "progress-bar";
-    
+
     const sizes = {
       sm: "h-1",
       md: "h-2",
@@ -41,10 +41,14 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
 
     const variants = {
       default: "progress-fill",
-      success: "h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500 ease-out",
-      warning: "h-full bg-gradient-to-r from-yellow-400 to-yellow-500 transition-all duration-500 ease-out",
-      error: "h-full bg-gradient-to-r from-red-400 to-red-500 transition-all duration-500 ease-out",
-      gradient: "h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-500 transition-all duration-500 ease-out",
+      success:
+        "h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500 ease-out",
+      warning:
+        "h-full bg-gradient-to-r from-yellow-400 to-yellow-500 transition-all duration-500 ease-out",
+      error:
+        "h-full bg-gradient-to-r from-red-400 to-red-500 transition-all duration-500 ease-out",
+      gradient:
+        "h-full bg-gradient-to-r from-green-400 via-blue-400 to-purple-500 transition-all duration-500 ease-out",
     };
 
     const pulseClass = pulse ? "animate-pulse-green" : "";
@@ -53,22 +57,22 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
       baseClasses,
       sizes[size],
       pulseClass,
-      className
+      className,
     );
 
     const progressFillClasses = cn(
       variants[variant],
-      animate && "transition-all duration-500 ease-out"
+      animate && "transition-all duration-500 ease-out",
     );
 
     const content = (
       <div className="w-full">
         {showLabel && (
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-earth-700">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-earth-700 text-sm font-medium">
               {label || "Progress"}
             </span>
-            <span className="text-sm text-earth-600">
+            <span className="text-earth-600 text-sm">
               {Math.round(percentage)}%
             </span>
           </div>
@@ -82,8 +86,8 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
           />
         </div>
         {!showLabel && (
-          <div className="flex justify-end mt-1">
-            <span className="text-xs text-earth-500">
+          <div className="mt-1 flex justify-end">
+            <span className="text-earth-500 text-xs">
               {Math.round(percentage)}%
             </span>
           </div>
@@ -92,7 +96,7 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
     );
 
     return content;
-  }
+  },
 );
 
 ProgressBar.displayName = "ProgressBar";
@@ -108,7 +112,10 @@ interface CircularProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   animate?: boolean;
 }
 
-const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>(
+const CircularProgress = React.forwardRef<
+  HTMLDivElement,
+  CircularProgressProps
+>(
   (
     {
       className,
@@ -122,7 +129,7 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
       animate = true,
       ...props
     },
-    ref
+    ref,
   ) => {
     const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
     const radius = (size - strokeWidth) / 2;
@@ -140,15 +147,14 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
     const content = (
       <div
         ref={ref}
-        className={cn("relative inline-flex items-center justify-center", className)}
+        className={cn(
+          "relative inline-flex items-center justify-center",
+          className,
+        )}
         style={{ width: size, height: size }}
         {...props}
       >
-        <svg
-          width={size}
-          height={size}
-          className="transform -rotate-90"
-        >
+        <svg width={size} height={size} className="-rotate-90 transform">
           {/* Background circle */}
           <circle
             cx={size / 2}
@@ -172,24 +178,24 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
             strokeDasharray={strokeDasharray}
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={
+              animate ? { duration: 0.8, ease: "easeOut" } : { duration: 0 }
+            }
           />
         </svg>
         {showLabel && (
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-lg font-semibold text-earth-900">
+            <span className="text-earth-900 text-lg font-semibold">
               {Math.round(percentage)}%
             </span>
-            {label && (
-              <span className="text-xs text-earth-600">{label}</span>
-            )}
+            {label && <span className="text-earth-600 text-xs">{label}</span>}
           </div>
         )}
       </div>
     );
 
     return content;
-  }
+  },
 );
 
 CircularProgress.displayName = "CircularProgress";
