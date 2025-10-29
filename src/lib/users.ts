@@ -227,6 +227,62 @@ export async function updateUserStats(
   }
 }
 
+// Update user profile information
+export async function updateUserProfile(
+  userId: string,
+  profileData: {
+    name?: string;
+    email?: string;
+    preferences?: {
+      notifications?: boolean;
+      weeklyGoal?: number;
+      theme?: "light" | "dark" | "auto";
+    };
+  },
+): Promise<UserProfile> {
+  try {
+    const profile = await getUserProfile(userId);
+    if (!profile) {
+      throw new Error("User profile not found");
+    }
+
+    const updatedProfile = await databases.updateDocument(
+      DB_CONFIG.databaseId,
+      DB_CONFIG.collections.users,
+      profile.id,
+      {
+        name: profileData.name ?? profile.name,
+        email: profileData.email ?? profile.email,
+        preferences: profileData.preferences
+          ? { ...profile.preferences, ...profileData.preferences }
+          : profile.preferences,
+        updatedAt: new Date().toISOString(),
+      },
+    );
+
+    return {
+      id: updatedProfile.$id,
+      userId: updatedProfile.userId,
+      name: updatedProfile.name,
+      email: updatedProfile.email,
+      totalPoints: updatedProfile.totalPoints,
+      currentStreak: updatedProfile.currentStreak,
+      level: updatedProfile.level,
+      badges: updatedProfile.badges,
+      totalActions: updatedProfile.totalActions,
+      carbonSaved: updatedProfile.carbonSaved,
+      waterSaved: updatedProfile.waterSaved,
+      wasteReduced: updatedProfile.wasteReduced,
+      preferences: updatedProfile.preferences,
+      createdAt: updatedProfile.$createdAt,
+      updatedAt: updatedProfile.updatedAt,
+    };
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw new Error("Failed to update user profile. Please try again.");
+  }
+}
+
 // Add badge to user
 export async function addBadgeToUser(
   userId: string,
@@ -255,6 +311,203 @@ export async function addBadgeToUser(
   }
 }
 
+// Update user profile when they complete an eco action
+export async function updateUserProfileFromAction(
+  userId: string,
+  actionData: {
+    points: number;
+    carbonSaved?: number;
+    waterSaved?: number;
+    wasteReduced?: number;
+    category?: string;
+  },
+): Promise<UserProfile> {
+  try { 
+    const profile = await getUserProfile(userId);
+    if (!profile) {
+      throw new Error("User profile not found");
+    }
+
+    // Calculate new stats
+    const newTotalPoints = profile.totalPoints + actionData.points;
+    const newTotalActions = profile.totalActions + 1;
+    const newCarbonSaved = profile.carbonSaved + (actionData.carbonSaved || 0);
+    const newWaterSaved = profile.waterSaved + (actionData.waterSaved || 0);
+    const newWasteReduced =
+      profile.wasteReduced + (actionData.wasteReduced || 0);
+
+    // Calculate new level based on points (every 1000 points = 1 level)
+    const newLevel = Math.floor(newTotalPoints / 1000) + 1;
+
+    // Update streak logic (you might want to implement proper streak tracking)
+    const today = new Date().toDateString();
+    const lastAction = profile.updatedAt
+      ? new Date(profile.updatedAt).toDateString()
+      : null;
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toDateString();
+
+    let newStreak = profile.currentStreak;
+    if (lastAction === yesterday) {
+      newStreak += 1; // Continue streak
+    } else if (lastAction !== today) {
+      newStreak = 1; // Start new streak
+    }
+    // If lastAction === today, keep current streak (same day action)
+
+    const updatedProfile = await databases.updateDocument(
+      DB_CONFIG.databaseId,
+      DB_CONFIG.collections.users,
+      profile.id,
+      {
+        totalPoints: newTotalPoints,
+        totalActions: newTotalActions,
+        carbonSaved: newCarbonSaved,
+        waterSaved: newWaterSaved,
+        wasteReduced: newWasteReduced,
+        level: newLevel,
+        currentStreak: newStreak,
+        updatedAt: new Date().toISOString(),
+      },
+    );
+
+    // Check for new badges based on the action
+    await checkAndAwardBadges(userId, {
+      totalPoints: newTotalPoints,
+      totalActions: newTotalActions,
+      currentStreak: newStreak,
+      level: newLevel,
+      category: actionData.category,
+    });
+
+    return {
+      id: updatedProfile.$id,
+      userId: updatedProfile.userId,
+      name: updatedProfile.name,
+      email: updatedProfile.email,
+      totalPoints: updatedProfile.totalPoints,
+      currentStreak: updatedProfile.currentStreak,
+      level: updatedProfile.level,
+      badges: updatedProfile.badges,
+      totalActions: updatedProfile.totalActions,
+      carbonSaved: updatedProfile.carbonSaved,
+      waterSaved: updatedProfile.waterSaved,
+      wasteReduced: updatedProfile.wasteReduced,
+      preferences: updatedProfile.preferences,
+      createdAt: updatedProfile.$createdAt,
+      updatedAt: updatedProfile.updatedAt,
+    };
+  } catch (error) {
+    console.error("Error updating user profile from action:", error);
+    throw new Error("Failed to update user profile. Please try again.");
+  }
+}
+
+// Check and award badges based on user achievements
+export async function checkAndAwardBadges(
+  userId: string,
+  stats: {
+    totalPoints: number;
+    totalActions: number;
+    currentStreak: number;
+    level: number;
+    category?: string;
+  },
+): Promise<string[]> {
+  try {
+    const profile = await getUserProfile(userId);
+    if (!profile) {
+      throw new Error("User profile not found");
+    }
+
+    const newBadges: string[] = [];
+    const currentBadges = profile.badges || [];
+
+    // Define badge criteria
+    const badgeCriteria = [
+      {
+        id: "First Action",
+        condition: stats.totalActions >= 1,
+        name: "First Steps",
+      },
+      {
+        id: "Action Hero",
+        condition: stats.totalActions >= 10,
+        name: "Action Hero",
+      },
+      {
+        id: "Eco Warrior",
+        condition: stats.totalActions >= 50,
+        name: "Eco Warrior",
+      },
+      {
+        id: "Green Champion",
+        condition: stats.totalActions >= 100,
+        name: "Green Champion",
+      },
+      {
+        id: "Streak Starter",
+        condition: stats.currentStreak >= 3,
+        name: "Streak Starter",
+      },
+      {
+        id: "Streak Master",
+        condition: stats.currentStreak >= 7,
+        name: "Streak Master",
+      },
+      {
+        id: "Dedication",
+        condition: stats.currentStreak >= 30,
+        name: "Dedication",
+      },
+      { id: "Level Up", condition: stats.level >= 2, name: "Level Up" },
+      { id: "Rising Star", condition: stats.level >= 5, name: "Rising Star" },
+      {
+        id: "Point Collector",
+        condition: stats.totalPoints >= 1000,
+        name: "Point Collector",
+      },
+      {
+        id: "Point Master",
+        condition: stats.totalPoints >= 5000,
+        name: "Point Master",
+      },
+    ];
+
+    // Check each badge criteria
+    for (const badge of badgeCriteria) {
+      if (badge.condition && !currentBadges.includes(badge.id)) {
+        newBadges.push(badge.id);
+      }
+    }
+
+    // Category-specific badges
+    if (
+      stats.category &&
+      !currentBadges.includes(`${stats.category} Specialist`)
+    ) {
+      newBadges.push(`${stats.category} Specialist`);
+    }
+
+    // Update profile with new badges
+    if (newBadges.length > 0) {
+      await databases.updateDocument(
+        DB_CONFIG.databaseId,
+        DB_CONFIG.collections.users,
+        profile.id,
+        {
+          badges: [...currentBadges, ...newBadges],
+          updatedAt: new Date().toISOString(),
+        },
+      );
+    }
+
+    return newBadges;
+  } catch (error) {
+    console.error("Error checking and awarding badges:", error);
+    return [];
+  }
+}
+
 // Get user leaderboard position
 export async function getUserLeaderboardPosition(userId: string): Promise<{
   rank: number;
@@ -279,4 +532,51 @@ export async function getUserLeaderboardPosition(userId: string): Promise<{
     console.error("Error getting leaderboard position:", error);
     throw new Error("Failed to get leaderboard position. Please try again.");
   }
+}
+
+// Get leaderboard data with users ordered by total points
+export async function getLeaderboardData(
+  limit: number = 100,
+): Promise<UserProfile[]> {
+  try {
+    const response = await databases.listDocuments(
+      DB_CONFIG.databaseId,
+      DB_CONFIG.collections.users,
+      [Query.orderDesc("totalPoints"), Query.limit(limit)],
+    );
+
+    return response.documents.map((doc) => ({
+      id: doc.$id,
+      userId: doc.userId,
+      name: doc.name,
+      email: doc.email,
+      totalPoints: doc.totalPoints || 0,
+      currentStreak: doc.currentStreak || 0,
+      level: doc.level || 1,
+      badges: doc.badges || [],
+      totalActions: doc.totalActions || 0,
+      carbonSaved: doc.carbonSaved || 0,
+      waterSaved: doc.waterSaved || 0,
+      wasteReduced: doc.wasteReduced || 0,
+      preferences: doc.preferences || {
+        notifications: true,
+        weeklyGoal: 7,
+        theme: "auto",
+      },
+      createdAt: doc.$createdAt,
+      updatedAt: doc.$updatedAt,
+    }));
+  } catch (error) {
+    console.error("Error getting leaderboard data:", error);
+    throw new Error("Failed to get leaderboard data. Please try again.");
+  }
+}
+
+// Get weekly leaderboard (users ordered by recent activity - this would need more complex logic)
+export async function getWeeklyLeaderboard(
+  limit: number = 100,
+): Promise<UserProfile[]> {
+  // For now, return same as general leaderboard
+  // In a real implementation, this would track weekly points separately
+  return getLeaderboardData(limit);
 }

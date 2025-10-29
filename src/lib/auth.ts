@@ -1,5 +1,6 @@
 import { account } from "@/tools/appwrite";
 import { User, LoginCredentials, RegisterCredentials } from "@/types/auth";
+import { createOrUpdateUserProfile } from "./users";
 
 // Register a new user
 export async function registerUser(
@@ -12,6 +13,24 @@ export async function registerUser(
       credentials.password,
       credentials.name,
     );
+
+    // Automatically create user profile in the users collection
+    try {
+      await createOrUpdateUserProfile({
+        userId: user.$id,
+        name: credentials.name,
+        email: credentials.email,
+        preferences: {
+          notifications: true,
+          weeklyGoal: 5,
+          theme: "auto",
+        },
+      });
+    } catch (profileError) {
+      console.error("Error creating user profile:", profileError);
+      // Don't throw here to avoid blocking registration if profile creation fails
+      // The profile can be created later when the user first accesses the dashboard
+    }
 
     return user as User;
   } catch (error: unknown) {
@@ -97,6 +116,42 @@ export async function logoutUser(): Promise<void> {
     ) {
       console.warn("Logout failed, but continuing...");
     }
+  }
+}
+
+// Update user password
+export async function updatePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<void> {
+  try {
+    await account.updatePassword(newPassword, currentPassword);
+  } catch (error: unknown) {
+    console.error("Password update error:", error);
+
+    // Handle specific Appwrite errors
+    if (error && typeof error === "object" && "code" in error) {
+      if (error.code === 401) {
+        throw new Error("Current password is incorrect.");
+      } else if (error.code === 400) {
+        throw new Error(
+          "Invalid password format. Password must be at least 8 characters long.",
+        );
+      }
+    }
+
+    if (
+      error &&
+      typeof error === "object" &&
+      "message" in error &&
+      typeof error.message === "string"
+    ) {
+      if (error.message.includes("password")) {
+        throw new Error("Current password is incorrect.");
+      }
+    }
+
+    throw new Error("Failed to update password. Please try again.");
   }
 }
 

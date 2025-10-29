@@ -1,6 +1,6 @@
 import { databases, DB_CONFIG } from "@/tools/appwrite";
 import { ID, Query } from "appwrite";
-import { Badge } from "./utils";
+
 
 // Badge definitions and management
 

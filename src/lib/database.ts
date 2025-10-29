@@ -1,12 +1,12 @@
 import { databases, DB_CONFIG } from "@/tools/appwrite";
 import { Query } from "appwrite";
-import { 
-  UserProfile, 
-  EcoAction, 
-  Challenge, 
-  Badge, 
+import {
+  UserProfile,
+  EcoAction,
+  Challenge,
+  Badge,
   AppwriteDocument,
-  AppwriteList 
+  AppwriteList,
 } from "@/types";
 
 // Generic database operations
@@ -14,14 +14,14 @@ export class DatabaseService {
   private static async createDocument<T>(
     collectionId: string,
     data: Omit<T, keyof AppwriteDocument>,
-    documentId?: string
+    documentId?: string,
   ): Promise<T> {
     try {
       const result = await databases.createDocument(
         DB_CONFIG.databaseId,
         collectionId,
         documentId || "unique()",
-        data as any
+        data as Record<string, unknown>,
       );
       return result as T;
     } catch (error) {
@@ -32,13 +32,13 @@ export class DatabaseService {
 
   private static async getDocument<T>(
     collectionId: string,
-    documentId: string
+    documentId: string,
   ): Promise<T> {
     try {
       const result = await databases.getDocument(
         DB_CONFIG.databaseId,
         collectionId,
-        documentId
+        documentId,
       );
       return result as T;
     } catch (error) {
@@ -49,13 +49,13 @@ export class DatabaseService {
 
   private static async listDocuments<T>(
     collectionId: string,
-    queries: string[] = []
+    queries: string[] = [],
   ): Promise<AppwriteList<T>> {
     try {
       const result = await databases.listDocuments(
         DB_CONFIG.databaseId,
         collectionId,
-        queries
+        queries,
       );
       return result as AppwriteList<T>;
     } catch (error) {
@@ -67,14 +67,14 @@ export class DatabaseService {
   private static async updateDocument<T>(
     collectionId: string,
     documentId: string,
-    data: Partial<T>
+    data: Partial<T>,
   ): Promise<T> {
     try {
       const result = await databases.updateDocument(
         DB_CONFIG.databaseId,
         collectionId,
         documentId,
-        data as any
+        data as Record<string, unknown>,
       );
       return result as T;
     } catch (error) {
@@ -85,13 +85,13 @@ export class DatabaseService {
 
   private static async deleteDocument(
     collectionId: string,
-    documentId: string
+    documentId: string,
   ): Promise<void> {
     try {
       await databases.deleteDocument(
         DB_CONFIG.databaseId,
         collectionId,
-        documentId
+        documentId,
       );
     } catch (error) {
       console.error(`Error deleting document from ${collectionId}:`, error);
@@ -100,8 +100,13 @@ export class DatabaseService {
   }
 
   // User operations
-  static async createUser(userData: Omit<UserProfile, keyof AppwriteDocument>): Promise<UserProfile> {
-    return this.createDocument<UserProfile>(DB_CONFIG.collections.users, userData);
+  static async createUser(
+    userData: Omit<UserProfile, keyof AppwriteDocument>,
+  ): Promise<UserProfile> {
+    return this.createDocument<UserProfile>(
+      DB_CONFIG.collections.users,
+      userData,
+    );
   }
 
   static async getUser(userId: string): Promise<UserProfile> {
@@ -112,7 +117,7 @@ export class DatabaseService {
     try {
       const result = await this.listDocuments<UserProfile>(
         DB_CONFIG.collections.users,
-        [Query.equal("userId", userId)]
+        [Query.equal("userId", userId)],
       );
       return result.documents[0] || null;
     } catch (error) {
@@ -121,8 +126,15 @@ export class DatabaseService {
     }
   }
 
-  static async updateUser(userId: string, userData: Partial<UserProfile>): Promise<UserProfile> {
-    return this.updateDocument<UserProfile>(DB_CONFIG.collections.users, userId, userData);
+  static async updateUser(
+    userId: string,
+    userData: Partial<UserProfile>,
+  ): Promise<UserProfile> {
+    return this.updateDocument<UserProfile>(
+      DB_CONFIG.collections.users,
+      userId,
+      userData,
+    );
   }
 
   static async deleteUser(userId: string): Promise<void> {
@@ -130,40 +142,58 @@ export class DatabaseService {
   }
 
   // Action operations
-  static async createAction(actionData: Omit<EcoAction, keyof AppwriteDocument>): Promise<EcoAction> {
-    return this.createDocument<EcoAction>(DB_CONFIG.collections.actions, actionData);
+  static async createAction(
+    actionData: Omit<EcoAction, keyof AppwriteDocument>,
+  ): Promise<EcoAction> {
+    return this.createDocument<EcoAction>(
+      DB_CONFIG.collections.actions,
+      actionData,
+    );
   }
 
   static async getAction(actionId: string): Promise<EcoAction> {
     return this.getDocument<EcoAction>(DB_CONFIG.collections.actions, actionId);
   }
 
-  static async getUserActions(userId: string, limit: number = 50): Promise<EcoAction[]> {
+  static async getUserActions(
+    userId: string,
+    limit: number = 50,
+  ): Promise<EcoAction[]> {
     const result = await this.listDocuments<EcoAction>(
       DB_CONFIG.collections.actions,
       [
         Query.equal("userId", userId),
         Query.orderDesc("timestamp"),
-        Query.limit(limit)
-      ]
+        Query.limit(limit),
+      ],
     );
     return result.documents;
   }
 
-  static async getActionsByCategory(category: string, limit: number = 50): Promise<EcoAction[]> {
+  static async getActionsByCategory(
+    category: string,
+    limit: number = 50,
+  ): Promise<EcoAction[]> {
     const result = await this.listDocuments<EcoAction>(
       DB_CONFIG.collections.actions,
       [
         Query.equal("category", category),
         Query.orderDesc("timestamp"),
-        Query.limit(limit)
-      ]
+        Query.limit(limit),
+      ],
     );
     return result.documents;
   }
 
-  static async updateAction(actionId: string, actionData: Partial<EcoAction>): Promise<EcoAction> {
-    return this.updateDocument<EcoAction>(DB_CONFIG.collections.actions, actionId, actionData);
+  static async updateAction(
+    actionId: string,
+    actionData: Partial<EcoAction>,
+  ): Promise<EcoAction> {
+    return this.updateDocument<EcoAction>(
+      DB_CONFIG.collections.actions,
+      actionId,
+      actionData,
+    );
   }
 
   static async deleteAction(actionId: string): Promise<void> {
@@ -171,21 +201,26 @@ export class DatabaseService {
   }
 
   // Challenge operations
-  static async createChallenge(challengeData: Omit<Challenge, keyof AppwriteDocument>): Promise<Challenge> {
-    return this.createDocument<Challenge>(DB_CONFIG.collections.challenges, challengeData);
+  static async createChallenge(
+    challengeData: Omit<Challenge, keyof AppwriteDocument>,
+  ): Promise<Challenge> {
+    return this.createDocument<Challenge>(
+      DB_CONFIG.collections.challenges,
+      challengeData,
+    );
   }
 
   static async getChallenge(challengeId: string): Promise<Challenge> {
-    return this.getDocument<Challenge>(DB_CONFIG.collections.challenges, challengeId);
+    return this.getDocument<Challenge>(
+      DB_CONFIG.collections.challenges,
+      challengeId,
+    );
   }
 
   static async getActiveChallenges(): Promise<Challenge[]> {
     const result = await this.listDocuments<Challenge>(
       DB_CONFIG.collections.challenges,
-      [
-        Query.equal("status", "active"),
-        Query.orderDesc("startDate")
-      ]
+      [Query.equal("status", "active"), Query.orderDesc("startDate")],
     );
     return result.documents;
   }
@@ -193,16 +228,20 @@ export class DatabaseService {
   static async getPublicChallenges(): Promise<Challenge[]> {
     const result = await this.listDocuments<Challenge>(
       DB_CONFIG.collections.challenges,
-      [
-        Query.equal("isPublic", true),
-        Query.orderDesc("startDate")
-      ]
+      [Query.equal("isPublic", true), Query.orderDesc("startDate")],
     );
     return result.documents;
   }
 
-  static async updateChallenge(challengeId: string, challengeData: Partial<Challenge>): Promise<Challenge> {
-    return this.updateDocument<Challenge>(DB_CONFIG.collections.challenges, challengeId, challengeData);
+  static async updateChallenge(
+    challengeId: string,
+    challengeData: Partial<Challenge>,
+  ): Promise<Challenge> {
+    return this.updateDocument<Challenge>(
+      DB_CONFIG.collections.challenges,
+      challengeId,
+      challengeData,
+    );
   }
 
   static async deleteChallenge(challengeId: string): Promise<void> {
@@ -210,7 +249,9 @@ export class DatabaseService {
   }
 
   // Badge operations
-  static async createBadge(badgeData: Omit<Badge, keyof AppwriteDocument>): Promise<Badge> {
+  static async createBadge(
+    badgeData: Omit<Badge, keyof AppwriteDocument>,
+  ): Promise<Badge> {
     return this.createDocument<Badge>(DB_CONFIG.collections.badges, badgeData);
   }
 
@@ -219,20 +260,29 @@ export class DatabaseService {
   }
 
   static async getAllBadges(): Promise<Badge[]> {
-    const result = await this.listDocuments<Badge>(DB_CONFIG.collections.badges);
+    const result = await this.listDocuments<Badge>(
+      DB_CONFIG.collections.badges,
+    );
     return result.documents;
   }
 
   static async getBadgesByCategory(category: string): Promise<Badge[]> {
     const result = await this.listDocuments<Badge>(
       DB_CONFIG.collections.badges,
-      [Query.equal("category", category)]
+      [Query.equal("category", category)],
     );
     return result.documents;
   }
 
-  static async updateBadge(badgeId: string, badgeData: Partial<Badge>): Promise<Badge> {
-    return this.updateDocument<Badge>(DB_CONFIG.collections.badges, badgeId, badgeData);
+  static async updateBadge(
+    badgeId: string,
+    badgeData: Partial<Badge>,
+  ): Promise<Badge> {
+    return this.updateDocument<Badge>(
+      DB_CONFIG.collections.badges,
+      badgeId,
+      badgeData,
+    );
   }
 
   static async deleteBadge(badgeId: string): Promise<void> {

@@ -1,5 +1,6 @@
 import { databases, DB_CONFIG } from "@/tools/appwrite";
 import { ID, Query } from "appwrite";
+import { updateUserProfileFromAction } from "./users";
 
 export interface Action {
   id: string;
@@ -29,7 +30,7 @@ export interface CreateActionData {
   };
 }
 
-// Save a new action to Appwrite
+// Save a new action to Appwrite and update user profile
 export async function saveAction(
   actionData: CreateActionData,
   userId: string,
@@ -52,6 +53,21 @@ export async function saveAction(
         wasteReduced: actionData.impact.wasteReduced,
       },
     );
+
+    // Automatically update user profile with the action's impact
+    try {
+      await updateUserProfileFromAction(userId, {
+        points: actionData.points,
+        carbonSaved: actionData.impact.carbonSaved,
+        waterSaved: actionData.impact.waterSaved,
+        wasteReduced: actionData.impact.wasteReduced,
+        category: actionData.category,
+      });
+    } catch (profileError) {
+      console.error("Error updating user profile from action:", profileError);
+      // Don't throw here to avoid breaking the action save
+      // The action is saved, but user stats update failed
+    }
 
     return {
       id: document.$id,
