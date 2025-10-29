@@ -3,15 +3,15 @@ export interface Badge {
   name: string;
   description: string;
   icon: string;
-  category: 'action' | 'streak' | 'challenge' | 'milestone' | 'special';
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  category: "action" | "streak" | "challenge" | "milestone" | "special";
+  rarity: "common" | "rare" | "epic" | "legendary";
   points: number;
   requirements: BadgeRequirement[];
   unlockedBy: string[];
 }
 
 export interface BadgeRequirement {
-  type: 'action_count' | 'streak' | 'points' | 'category' | 'challenge';
+  type: "action_count" | "streak" | "points" | "category" | "challenge";
   value: number | string;
   description: string;
 }
@@ -21,7 +21,7 @@ export interface Achievement {
   title: string;
   description: string;
   icon: string;
-  category: 'milestone' | 'special' | 'community';
+  category: "milestone" | "special" | "community";
   points: number;
   unlockedAt?: string;
   progress?: number;
@@ -41,11 +41,11 @@ export interface PointsTransaction {
   $id: string;
   userId: string;
   amount: number;
-  type: 'earned' | 'spent' | 'bonus' | 'penalty';
+  type: "earned" | "spent" | "bonus" | "penalty";
   source: string;
   description: string;
   timestamp: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface LeaderboardEntry {

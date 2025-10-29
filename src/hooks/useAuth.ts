@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { AuthService } from "@/lib/auth";
+import {
+  getCurrentUser,
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "@/lib/auth";
 import { User, LoginCredentials, RegisterCredentials } from "@/types/auth";
 
 interface AuthState {
@@ -16,15 +21,15 @@ export const useAuth = () => {
   });
 
   const setLoading = (loading: boolean) => {
-    setState(prev => ({ ...prev, loading }));
+    setState((prev) => ({ ...prev, loading }));
   };
 
   const setError = (error: string | null) => {
-    setState(prev => ({ ...prev, error }));
+    setState((prev) => ({ ...prev, error }));
   };
 
   const setUser = (user: User | null) => {
-    setState(prev => ({ ...prev, user }));
+    setState((prev) => ({ ...prev, user }));
   };
 
   const clearError = useCallback(() => {
@@ -35,10 +40,11 @@ export const useAuth = () => {
     try {
       setLoading(true);
       setError(null);
-      const user = await AuthService.login(credentials);
+      const user = await loginUser(credentials);
       setUser(user);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Login failed";
+      const errorMessage =
+        error instanceof Error ? error.message : "Login failed";
       setError(errorMessage);
       throw error;
     } finally {
@@ -50,10 +56,11 @@ export const useAuth = () => {
     try {
       setLoading(true);
       setError(null);
-      const user = await AuthService.register(credentials);
+      const user = await registerUser(credentials);
       setUser(user);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Registration failed";
+      const errorMessage =
+        error instanceof Error ? error.message : "Registration failed";
       setError(errorMessage);
       throw error;
     } finally {
@@ -64,10 +71,11 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      await AuthService.logout();
+      await logoutUser();
       setUser(null);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Logout failed";
+      const errorMessage =
+        error instanceof Error ? error.message : "Logout failed";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -77,9 +85,9 @@ export const useAuth = () => {
   const checkAuth = useCallback(async () => {
     try {
       setLoading(true);
-      const user = await AuthService.getCurrentUser();
+      const user = await getCurrentUser();
       setUser(user);
-    } catch (error) {
+    } catch {
       setUser(null);
     } finally {
       setLoading(false);

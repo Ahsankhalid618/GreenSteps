@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuthContext } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/Button";
 import { LogoutButton } from "@/components/ui/LogoutButton";
-import { User, Settings, LogOut, ChevronDown, Mail, Award } from "lucide-react";
+import { User, Settings, LogOut, ChevronDown, Award } from "lucide-react";
 
 interface UserMenuProps {
   className?: string;

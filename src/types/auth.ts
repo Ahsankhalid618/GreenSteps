@@ -4,7 +4,7 @@ export interface User {
   name: string;
   emailVerification: boolean;
   phoneVerification: boolean;
-  prefs: Record<string, any>;
+  prefs: Record<string, unknown>;
   registration: string;
   status: boolean;
 }

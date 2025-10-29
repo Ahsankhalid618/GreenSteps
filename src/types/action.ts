@@ -1,12 +1,12 @@
-export type ActionCategory = 
-  | 'transportation'
-  | 'energy'
-  | 'waste'
-  | 'water'
-  | 'food'
-  | 'shopping'
-  | 'lifestyle'
-  | 'community';
+export type ActionCategory =
+  | "transportation"
+  | "energy"
+  | "waste"
+  | "water"
+  | "food"
+  | "shopping"
+  | "lifestyle"
+  | "community";
 
 export interface EcoAction {
   $id: string;
@@ -25,7 +25,7 @@ export interface EcoAction {
     lng: number;
     address: string;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ActionTemplate {
@@ -38,7 +38,7 @@ export interface ActionTemplate {
   waterSaved?: number;
   wasteReduced?: number;
   icon: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   estimatedTime: number; // minutes
   requirements?: string[];
   tips?: string[];
