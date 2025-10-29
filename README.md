@@ -408,7 +408,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Acknowledgments
 
 - [Appwrite](https://appwrite.io) for the backend infrastructure
-- [Tailwind CSS](https://tailwindcss.com) for the styling framework
+- [Tailwind CSS](https://tailwindcss.com) for the styling framework of project.
 - [Framer Motion](https://framer.com/motion) for animations
 - [Lucide](https://lucide.dev) for the icon library
 
