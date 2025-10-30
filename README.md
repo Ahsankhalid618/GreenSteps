@@ -4,20 +4,24 @@
 <br/><br/>
 
 <!-- Dashboard Images Grid 2x2 -->
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 800px; margin: 0 auto;">
-  <div style="width: 350px; height: 200px; overflow: hidden;">
-    <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/Dashboard.png" alt="GreenSteps Dashboard" style="width: 100%; height: 100%; object-fit: cover;" />
-  </div>
-  <div style="width: 350px; height: 200px; overflow: hidden;">
-    <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/Actions.png" alt="GreenSteps Actions" style="width: 100%; height: 100%; object-fit: cover;" />
-  </div>
-  <div style="width: 350px; height: 200px; overflow: hidden;">
-    <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/Challenge.png" alt="GreenSteps Challenge" style="width: 100%; height: 100%; object-fit: cover;" />
-  </div>
-  <div style="width: 350px; height: 200px; overflow: hidden;">
-    <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/badge.png" alt="GreenSteps Badge" style="width: 100%; height: 100%; object-fit: cover;" />
-  </div>
-</div>
+<table>
+  <tr>
+    <td width="400" height="250">
+      <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/Dashboard.png" alt="GreenSteps Dashboard" width="400" height="250" />
+    </td>
+    <td width="400" height="250">
+      <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/Actions.png" alt="GreenSteps Actions" width="400" height="250" />
+    </td>
+  </tr>
+  <tr>
+    <td width="400" height="250">
+      <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/Challenge.png" alt="GreenSteps Challenge" width="400" height="250" />
+    </td>
+    <td width="400" height="250">
+      <img src="https://raw.githubusercontent.com/Ahsankhalid618/GreenSteps/refs/heads/main/public/badge.png" alt="GreenSteps Badge" width="400" height="250" />
+    </td>
+  </tr>
+</table>
 
 </div>
 
