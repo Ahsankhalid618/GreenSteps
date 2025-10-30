@@ -5,7 +5,12 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["@next/font"],
   },
   images: {
-    domains: ["fonts.gstatic.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "fonts.gstatic.com",
+      },
+    ],
   },
   async headers() {
     return [

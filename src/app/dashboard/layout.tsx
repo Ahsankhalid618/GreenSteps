@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   if (!user) {
     return (
       <div className="gradient-earth flex min-h-screen items-center justify-center">
-        <div className="card max-w-md p-8 text-center">
+        <div className="card max-w-4xl p-8 text-center">
           <h1 className="heading-md mb-4">Access Denied</h1>
           <p className="body-md">Please sign in to access the dashboard.</p>
         </div>
