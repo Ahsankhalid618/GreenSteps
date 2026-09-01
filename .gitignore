@@ -55,6 +55,9 @@ next-env.d.ts
 *-lock.json
 *-lock.yaml
 *.iml
-temp_auto_push.bat
-temp_interactive_push.bat
-branch_structure.json
+
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
